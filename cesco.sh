@@ -1,7 +1,3 @@
-#!/data/data/com.termux/files/usr/bin/bash 
-# Interpretazione determinata per l'esecuzione     
-COMANDI = "pkg install git -y\npkg install nodejs -y\npkg install ffmpeg -y\npkg install imagemagick -y\npkg install -y yarn\ngit clone https://github.com/Alba070503/YotsubaBot-MD\ncd YotsubaBot-MD\nyarn install\nnpm install\nnpm start"
-
 echo -e "\e[35m
 
 _░▒███████
@@ -22,6 +18,7 @@ _______░▒▓██
 _____░▒▓██\n\e[0m" 
 
 echo -e "\033[01;93mPreparando l'installazione...\nPreparing installation...\n\033[0m"
+
 echo -e "\033[01;32m\033[01mInstallando le dipendenze!!\nInstalling dependencies!!\n\033[0m" 
 echo -e "\e[36m
 █ █▄░█ █▀ ▀█▀ ▄▀█ █░░ █░░   █▀▀ █ ▀█▀
@@ -131,7 +128,7 @@ echo -e "\e[35m
 ╚═╝░░╚═╝░░╚═╝░░  ╚═╝╚═╝░░╚══╝╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚══════╝\n\e[0m"
 
 echo -e "\033[1;35m"
-git clone https://github.com/ilcescodicosenz/cescobot
+git clone https://github.com/ilcescodicosenz/cescobot.git
 echo -e "\033[01;32m\033[01mIl clone è stato scaricato e installato correttamente.\nThe clone has been downloaded and installed successfully.\n\033[0m"
 
 echo -e "\033[01;32m\033[01mCambiando alla directory del repository!!\nChanging to the repository directory!!\n\033[0m" 
@@ -162,6 +159,55 @@ echo -e "\033[0;34mImpossibile installare NPM. Verifica la connessione a Interne
 else
 echo -e "\033[01;32m\033[01mNPM è stato installato correttamente..\n\033[0m" 
 fi
+
+: <<'COMMENT'
+v="${b}\033[1;32m"
+v1="${b}\033[32m"
+b="\033[0m"
+
+menu() {
+	#cescobot
+	echo -e "${v1} MENU DI CONFIGURAZIONE"
+	printf "\n"
+	printf "${v1}[${b}01${v1}]${v} Visitare il Gruppo di Aggiornamenti\n"
+	printf "\n"
+	printf "${v1}[${b}02${v1}]${v} Scegliere la lingua italiana\n"
+	printf "\n"
+	printf "${v1}[${b}03${v1}]${v} Scegliere la lingua inglese\n"
+	printf "\n"
+	printf "${v1}[${b}04${v1}]${v} Continuare\n"
+	printf "\n"
+}
+
+menu_aiuto() {
+    #printf "${v1}[${b}++${v1}]${v} cescobotD${b}: "
+	read opzione
+	case $opzione in
+            01|1)
+                am start -a android.intent.action.VIEW https://whatsapp.com/channel/0029Vb2xynG9MF8tPyNWoE35 &>> /dev/null
+                echo -e "${b}[${v1}++${b}]${v} Accesso al Gruppo Ufficiale\n"
+                
+                ;;
+            02|2)
+                echo -e "${b}[${v1}++${b}]${v} Lingua italiana selezionata\n"
+                
+                ;;
+            03|3)
+                echo -e "${b}[${v1}++${b}]${v} Lingua inglese selezionata\n"
+                
+                ;;
+	    04|4)
+	        avvia
+                echo -e "${b}[${v1}++${b}]${v} Continuando...\n"
+                
+                ;;
+            *)
+                echo -e "${v1}Comando: '"${r1}${opzione}${v1}"' non valido."
+		echo ""
+		inizio
+                ;;
+        esac
+}
 
 clear
 echo -e "\e[36m
