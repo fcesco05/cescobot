@@ -1,96 +1,98 @@
-import { join, dirname } from 'path';
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
+import { join, dirname } from 'path' 
+import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
+import boxen from 'boxen'
 import { setupMaster, fork } from 'cluster';
 import { watchFile, unwatchFile } from 'fs';
-import cfonts from 'cfonts';
-import { createInterface } from 'readline';
-import yargs from 'yargs';
+import cfonts from 'cfonts'
+import { createInterface } from 'readline'
+import yargs from 'yargs'
+import chalk from 'chalk'
 
-// Configurazioni iniziali
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const require = createRequire(__dirname);
-const { name, author } = require(join(__dirname, './package.json'));
-const rl = createInterface(process.stdin, process.stdout);
+console.log('\n✰ Avviando cescobot ')
 
-// Funzione per messaggi animati
-const animatedMessage = (text, font = 'block', colors = ['cyan', 'blue'], align = 'center') => {
-  cfonts.say(text, {
-    font,
-    align,
-    gradient: colors,
-    transitionGradient: true,
-  });
-};
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const require = createRequire(__dirname)
+const { name, description, collaborators, author, version } = require(join(__dirname, './package.json'))
+const { say } = cfonts
+const rl = createInterface(process.stdin, process.stdout)
+const subtitleStyle = chalk.white.bold
+const responseStyle = chalk.dim.bold
 
+let activeCollaborators = ''
+for (const key in collaborators) {
+  if (collaborators.hasOwnProperty(key)) {
+    activeCollaborators += collaborators[key] + ', '
+  }
+}
+activeCollaborators = activeCollaborators.slice(0, -2);
 
-console.clear();
-animatedMessage('cesco\nBot', 'block', ['magenta', 'cyan']);
-console.log('\n🔥 Sistema in avvio...');
-console.log('⏳ Preparazione dei moduli...\n');
+cfonts.say('cesco\nbot md', {
+  align: 'center',           
+  gradient: ['red', 'blue'] 
+})
 
-// Variabile per controllo dello stato
-let isRunning = false;
+cfonts.say(description, {
+  font: 'console',
+  align: 'center',
+  gradient: ['blue', 'magenta']
+})
 
-/**
- * Avvia un file JavaScript
- * @param {String} file - Percorso del file da avviare.
- */
+const message = `${subtitleStyle('Sviluppato da »')} ${responseStyle(author.name)}
+${subtitleStyle('Codice basato su »')} ${responseStyle('BrunoSobrino')}
+${subtitleStyle('Collaboratori attivi »')} ${responseStyle(activeCollaborators)}
+${subtitleStyle('Versione »')} ${responseStyle(version)}`
+
+console.log(boxen(message, { padding: 1, margin: 1, borderStyle: 'double', borderColor: 'blue', float: 'center', }))
+
+var isRunning = false
 function start(file) {
-  if (isRunning) return;
-  isRunning = true;
-
-  const args = [join(__dirname, file), ...process.argv.slice(2)];
-
-  animatedMessage('Ediz by cesco', 'console', ['yellow', 'green']);
-  console.log('🚀 Bot completato.\n');
-
-  // Configurazione del cluster
+  if (isRunning) return
+  isRunning = true
+  let args = [join(__dirname, file), ...process.argv.slice(2)]
+  
   setupMaster({
     exec: args[0],
     args: args.slice(1),
-  });
-
-  let processInstance = fork();
-
-  processInstance.on('message', (data) => {
-    console.log('[📩 RICEVUTO]', data);
+  })
+  
+  let p = fork()
+  p.on('message', data => {
     switch (data) {
       case 'reset':
-        processInstance.kill();
-        isRunning = false;
-        start(file);
-        break;
+        p.process.kill()
+        isRunning = false
+        start.apply(this, arguments)
+        break
       case 'uptime':
-        processInstance.send(process.uptime());
-        break;
+        p.send(process.uptime())
+        break
     }
-  });
-
-  processInstance.on('exit', (_, code) => {
-    isRunning = false;
-    console.error('❌ Errore inatteso:', code);
-
-    if (code !== 0) {
-      watchFile(args[0], () => {
-        unwatchFile(args[0]);
-        start(file);
-      });
-    }
-  });
-
-  // Gestione input da console
-  let opts = new Object(
-    yargs(process.argv.slice(2)).exitProcess(false).parse()
-  );
-  if (!opts['test']) {
-    if (!rl.listenerCount('line')) {
-      rl.on('line', (line) => {
-        processInstance.emit('message', line.trim());
-      });
-    }
-  }
+  })
+  
+  p.on('exit', (_, code) => {
+    isRunning = false
+    console.error('🚩 Errore:\n', code)
+    process.exit()
+    if (code === 0) return
+    watchFile(args[0], () => {
+      unwatchFile(args[0])
+      start(file)
+    })
+  })
+  
+  let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
+  if (!opts['test'])
+    if (!rl.listenerCount()) rl.on('line', line => {
+      p.emit('message', line.trim())
+    })
 }
 
-// Avvio del file principale
-start('main.js');
+process.on('warning', (warning) => {
+  if (warning.name === 'MaxListenersExceededWarning') {
+    console.warn('🚩 Superato il limite di Listeners su:')
+    console.warn(warning.stack)
+  }
+})
+
+start('cesco.js')
