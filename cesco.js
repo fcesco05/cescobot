@@ -167,7 +167,7 @@ if (!fs.existsSync(`./${sessions}/creds.json`)) {
           if (numeroTelefono.match(/^\d+$/) && Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
             break 
           } else {
-            console.log(chalk.bgBlack(chalk.bold.greenBright(`🚩 Per favore, scrivi il tuo numero WhatsApp.\n☁️  Esempio: 57321×××××××\n`)))
+            console.log(chalk.bgBlack(chalk.bold.greenBright(`🚩 Per favore, scrivi il tuo numero WhatsApp.\n☁️  Esempio: 39375×××××××\n`)))
           }
         }
         rl.close()  
