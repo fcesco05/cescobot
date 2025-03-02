@@ -215,7 +215,7 @@ COMMENT
 
 clear
 echo -e "\e[36m
-┏꧁𓊈𒆜🆈🅾🆃🆂🆄🅱🅰🅱🅾🆃-🅼🅳𒆜𓊉꧂
+┏꧁𓊈𒆜cescobot𒆜𓊉꧂
 
 ✰ Creatore:
 » ilcescodicosenz
