@@ -1,98 +1,67 @@
-import { join, dirname } from 'path' 
-import { createRequire } from 'module'
+console.log('Preparo bixby...')
+import { join, dirname } from 'path'
+import { createRequire } from "module";
 import { fileURLToPath } from 'url'
-import boxen from 'boxen'
-import { setupMaster, fork } from 'cluster';
-import { watchFile, unwatchFile } from 'fs';
-import cfonts from 'cfonts'
+import { setupMaster, fork } from 'cluster'
+import { watchFile, unwatchFile } from 'fs'
+import cfonts from 'cfonts';
 import { createInterface } from 'readline'
 import yargs from 'yargs'
-import chalk from 'chalk'
-
-console.log('\n✰ Avviando cescobot ')
-
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const require = createRequire(__dirname)
-const { name, description, collaborators, author, version } = require(join(__dirname, './package.json'))
+const require = createRequire(__dirname) 
+const { name, author } = require(join(__dirname, './package.json')) 
 const { say } = cfonts
 const rl = createInterface(process.stdin, process.stdout)
-const subtitleStyle = chalk.white.bold
-const responseStyle = chalk.dim.bold
 
-let activeCollaborators = ''
-for (const key in collaborators) {
-  if (collaborators.hasOwnProperty(key)) {
-    activeCollaborators += collaborators[key] + ', '
-  }
-}
-activeCollaborators = activeCollaborators.slice(0, -2);
-
-cfonts.say('cesco\nbot md', {
-  align: 'center',           
-  gradient: ['red', 'blue'] 
-})
-
-cfonts.say(description, {
-  font: 'console',
-  align: 'center',
-  gradient: ['blue', 'magenta']
-})
-
-const message = `${subtitleStyle('Sviluppato da »')} ${responseStyle(author.name)}
-${subtitleStyle('Codice basato su »')} ${responseStyle('BrunoSobrino')}
-${subtitleStyle('Collaboratori attivi »')} ${responseStyle(activeCollaborators)}
-${subtitleStyle('Versione »')} ${responseStyle(version)}`
-
-console.log(boxen(message, { padding: 1, margin: 1, borderStyle: 'double', borderColor: 'blue', float: 'center', }))
+say('\ncescobot\nbot', {
+font: 'block',
+align: 'center',
+color: ['cyan', 'green']})
 
 var isRunning = false
+/**
+* Start a js file
+* @param {String} file `path/to/file`
+*/
 function start(file) {
-  if (isRunning) return
-  isRunning = true
-  let args = [join(__dirname, file), ...process.argv.slice(2)]
-  
-  setupMaster({
-    exec: args[0],
-    args: args.slice(1),
-  })
-  
-  let p = fork()
-  p.on('message', data => {
-    switch (data) {
-      case 'reset':
-        p.process.kill()
-        isRunning = false
-        start.apply(this, arguments)
-        break
-      case 'uptime':
-        p.send(process.uptime())
-        break
-    }
-  })
-  
-  p.on('exit', (_, code) => {
-    isRunning = false
-    console.error('🚩 Errore:\n', code)
-    process.exit()
-    if (code === 0) return
-    watchFile(args[0], () => {
-      unwatchFile(args[0])
-      start(file)
-    })
-  })
-  
-  let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-  if (!opts['test'])
-    if (!rl.listenerCount()) rl.on('line', line => {
-      p.emit('message', line.trim())
-    })
-}
+if (isRunning) return
+isRunning = true
+let args = [join(__dirname, file), ...process.argv.slice(2)]
 
-process.on('warning', (warning) => {
-  if (warning.name === 'MaxListenersExceededWarning') {
-    console.warn('🚩 Superato il limite di Listeners su:')
-    console.warn(warning.stack)
-  }
-})
-
+say('developed by cescobot', {
+font: 'console',
+align: 'center',
+color: ['cyan', 'blue']})
+  
+setupMaster({
+exec: args[0],
+args: args.slice(1), })
+let p = fork()
+p.on('message', data => {
+console.log('[REINVIA LA RISPOSTA]', data)
+switch (data) {
+case 'reset':
+p.process.kill()
+isRunning = false
+start.apply(this, arguments)
+break
+case 'uptime':
+p.send(process.uptime())
+break }})
+p.on('exit', (_, code) => {
+isRunning = false
+console.error('Errore inaspettato contattare +39 375 585 3799', code)
+  
+p.process.kill()
+isRunning = false
+start.apply(this, arguments)
+  
+if (code === 0) return
+watchFile(args[0], () => {
+unwatchFile(args[0])
+start(file)})})
+let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
+if (!opts['test'])
+if (!rl.listenerCount()) rl.on('line', line => {
+p.emit('message', line.trim())})}
 start('cesco.js')
