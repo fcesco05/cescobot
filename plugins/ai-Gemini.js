@@ -1,44 +1,27 @@
-import fetch from 'node-fetch'
+import fetch from 'node-fetch';
 
-let handler = async (m, { text, conn, usedPrefix, command }) => {
-    // Controlla se il testo della richiesta è stato fornito
+var handler = async (m, { text, usedPrefix, command }) => {
     if (!text) {
-        return conn.reply(m.chat, `❀ Fai una richiesta a Gemini in modo che risponda.`, m);
+        await m.reply(`Per favore, inserisci una domanda per far sì che Gemini risponda.\n\nEsempio:\n${usedPrefix + command} Raccomanda un top 10 di film d'azione\n${usedPrefix + command} Codice in JS per un gioco di carte`);
+        return;
     }
 
     try {
-        // Aggiungi una reazione di attesa
-        await m.react('⌛');  // Reazione per l'attesa, puoi sostituire con un emoji che ti piace
-
-        // Chiamata all'API di Gemini
-        let response = await fetch(`https://apis-starlights-team.koyeb.app/starlight/gemini?text=${encodeURIComponent(text)}`);
-        
-        // Controlla se la risposta è ok (status code 200)
-        if (response.ok) {
-            let data = await response.json();
-            if (data.result) {
-                await conn.reply(m.chat, data.result, m);
-            } else {
-                await conn.reply(m.chat, `✘ Gemini non ha risposto alla tua richiesta.`, m);
-            }
-        } else {
-            // Gestione degli errori HTTP
-            await conn.reply(m.chat, `✘ Errore nel recuperare la risposta da Gemini. Riprova più tardi.`, m);
-        }
-
-        // Reazione di successo (puoi sostituire con un'emoji che ti piace)
-        await m.react('✅');
-    } catch (error) {
-        // Reazione di errore in caso di problemi di connessione
-        await m.react('❌');
-        console.error('Errore:', error);
-        await conn.reply(m.chat, `✘ Gemini non può rispondere a questa domanda. Si è verificato un errore.`, m);
+        conn.sendPresenceUpdate('composing', m.chat);
+        var apii = await fetch(`https://apis-starlights-team.koyeb.app/starlight/gemini?text=${text}`);
+        var res = await apii.json();
+        await m.reply(res.result);
+    } catch (e) {
+        await conn.reply(m.chat, `Si è verificato un errore. Per favore, riprova più tardi.\n\n#report ${usedPrefix + command}\n\n${wm}`, fkontak, m);
+        console.log(`Errore nel comando ${usedPrefix + command}`);
+        console.log(e);
     }
 };
 
-// Definisci il comando
-handler.command = ['gemini'];
-handler.help = ['gemini'];
-handler.tags = ['ai'];
+handler.command = ['bard', 'gemini', 'ia'];
+handler.help = ['bard', 'gemini'];
+handler.tags = ['herramientas'];
+
+handler.premium = false;
 
 export default handler;
