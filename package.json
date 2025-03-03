@@ -34,7 +34,6 @@
   },
   "license": "GPL-3.0-or-later",
 "dependencies": {
-"dependencies": {
   "@adiwajshing/keyed-db": "^0.2.4",
   "@bochilteam/scraper": "^4.2.4",
   "@brandond/findthelyrics": "^2.0.5",
@@ -111,8 +110,6 @@
 "devDependencies": {
   "eslint": "^8.45.0",
   "eslint-config-google": "^0.14.0"
-}
-
 },
 "optionalDependencies": {
 "wa-sticker-formatter": "^4.3.2",
