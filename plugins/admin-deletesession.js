@@ -41,8 +41,8 @@ const handler = async (message, { conn, usedPrefix }) => {
         message: {
             locationMessage: {
                 name: '' + userName,
-                jpegThumbnail: await (await fetch('https://i.ibb.co/JRc3WH15/chatunity-jpg.jpg')).buffer(),
-                vcard: 'BEGIN:VCARD\nVERSION:3.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTITLE:\nitem1.TEL;waid=19709001746:+1 (970) 900-1746\nitem1.X-ABLabel:Unlimited\nX-WA-BIZ-DESCRIPTION:ofc\nX-WA-BIZ-NAME:Unlimited\nEND:VCARD'
+                jpegThumbnail: await (await fetch('https://i.ibb.co/JRc3WH15/cescobot.jpg')).buffer(),
+                vcard: 'BEGIN:VCARD\nVERSION:1.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTITLE:\nitem1.TEL;waid=19709001746:+1 (970) 900-1746\nitem1.X-ABLabel:Unlimited\nX-WA-BIZ-DESCRIPTION:ofc\nX-WA-BIZ-NAME:Unlimited\nEND:VCARD'
             }
         },
         participant: '0@s.whatsapp.net'
