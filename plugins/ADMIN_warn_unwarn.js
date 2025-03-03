@@ -4,7 +4,7 @@ const time = async (ms) => {
 
 let handler = async (m, { conn, text, args, groupMetadata, usedPrefix, command }) => {
   if (command == 'warn' || command == "ammonisci") {
-    let maxWarnings = 4; // Max number of warnings allowed
+    let maxWarnings = 5; // Max number of warnings allowed
     let who;
 
     // Determine the target user
