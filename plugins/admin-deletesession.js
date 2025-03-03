@@ -2,55 +2,57 @@ import { readdirSync, unlinkSync, existsSync, promises as fsPromises, rmSync } f
 import path from 'path';
 
 const handler = async (message, { conn, usedPrefix }) => {
-    if (global.owner?.user?.jid !== conn.user?.jid) {
-        return conn.sendMessage(message.chat, { text: "*Utilizza questo comando direttamente nel numero principale del Bot.*" }, { quoted: message });
+    if (global.user['id'] !== conn.user['id']) {
+        return conn.sendMessage(message.chat, { text: 'Non autorizzato.' }, { quoted: message });
     }
 
-    await conn.sendMessage(message.chat, { text: "ⓘ Ripristino delle sessioni in corso..." }, { quoted: message });
+    await conn.sendMessage(message.chat, { text: 'Comando in esecuzione...' }, { quoted: message });
 
-    const sessionFolder = './Sessioni/';
+    const sessionFolderPath = './Sessioni/';
     try {
-        if (!existsSync(sessionFolder)) {
-            return await conn.sendMessage(message.chat, { text: "*La cartella Sessioni non esiste o è vuota.*" }, { quoted: message });
+        if (!existsSync(sessionFolderPath)) {
+            return await conn.sendMessage(message.chat, { text: 'La cartella Sessioni non esiste o è vuota.' }, { quoted: message });
         }
-        
-        const files = await fsPromises.readdir(sessionFolder);
-        let deletedCount = 0;
-        for (const file of files) {
+
+        const sessionFiles = await fsPromises.readdir(sessionFolderPath);
+        let deletedFilesCount = 0;
+
+        for (const file of sessionFiles) {
             if (file !== 'creds.json') {
-                await fsPromises.unlink(path.join(sessionFolder, file));
-                deletedCount++;
+                await fsPromises.unlink(path.join(sessionFolderPath, file));
+                deletedFilesCount++;
             }
         }
 
-        const responseText = deletedCount === 0
-            ? "ⓘ Le sessioni sono vuote ‼️"
-            : `ⓘ Sono stati eliminati ${deletedCount} archivi nelle sessioni.`;
-        await conn.sendMessage(message.chat, { text: responseText }, { quoted: message });
+        if (deletedFilesCount === 0) {
+            await conn.sendMessage(message.chat, { text: 'Le sessioni sono vuote!' }, { quoted: message });
+        } else {
+            await conn.sendMessage(message.chat, { text: `${deletedFilesCount} archivi nelle sessioni sono stati eliminati.` }, { quoted: message });
+        }
     } catch (error) {
         console.error('Errore', error);
-        await conn.sendMessage(message.chat, { text: "Errore" }, { quoted: message });
+        await conn.sendMessage(message.chat, { text: 'Si è verificato un errore durante l\'operazione.' }, { quoted: message });
     }
 
-    const botInfo = global.db?.nomedelbot || "cescobot";
-    const botImage = "https://i.ibb.co/JRc3WH15/cescobot.png";
-    const locationMessage = {
-        key: { participants: "0@s.whatsapp.net", fromMe: false, id: "Halo" },
+    const userData = global.db.users[message.sender];
+    let userName = global.db.settings.userName || 'Utente';
+    let vCardMessage = {
+        key: { participants: 'Halo', fromMe: false, id: 'Halo' },
         message: {
             locationMessage: {
-                name: botInfo,
-                jpegThumbnail: await (await fetch(botImage)).buffer(),
-                vcard: `BEGIN:VCARD\nVERSION:1.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTITLE:\nit\nTEL;waid=19709001746:+1 (970) 900-1746\nX-ABLabel:Unlimited\nX-WA-BIZ-DESCRIPTION:ofc\nX-WA-BIZ-NAME:Unlimited\nEND:VCARD`
+                name: '' + userName,
+                jpegThumbnail: await (await fetch('https://i.ibb.co/JRc3WH15/chatunity-jpg.jpg')).buffer(),
+                vcard: 'BEGIN:VCARD\nVERSION:3.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTITLE:\nitem1.TEL;waid=19709001746:+1 (970) 900-1746\nitem1.X-ABLabel:Unlimited\nX-WA-BIZ-DESCRIPTION:ofc\nX-WA-BIZ-NAME:Unlimited\nEND:VCARD'
             }
         },
-        participant: "0@s.whatsapp.net"
+        participant: '0@s.whatsapp.net'
     };
 
-    await conn.sendMessage(message.chat, { text: "ⓘ Ora sarai in grado di leggere i messaggi del bot" }, { quoted: locationMessage });
+    await conn.sendMessage(message.chat, { text: 'Completato!' }, { quoted: vCardMessage });
 };
 
 handler.help = ['del_reg_in_session_owner'];
-handler.command = ['deletession', 'ds', 'clearallsession'];
-handler.admin = true;
+handler.command = /^(deletession|ds|clearallsession)$/i;
+handler.isEnabled = true;
 
 export default handler;
