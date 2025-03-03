@@ -9,7 +9,7 @@ let handler = async (m, { conn, isAdmin }) => {
 *╭•·–––––––––––––––––––·•*
 │ *Tot : ${adv.length} User* ${adv.length ? '\n' + adv.map(([jid, user], i) => `
 │
-│ *${i + 1}.* ${conn.getName(jid) == undefined ? 'Senza utenti' : conn.getName(jid)} *(${user.warn}/3)*
+│ *${i + 1}.* ${conn.getName(jid) == undefined ? 'Senza utenti' : conn.getName(jid)} *(${user.warn}/5)*
 │ ${isAdmin ? '@' + jid.split`@`[0] : jid}
 │ Motivi:
 ${user.warnReasons ? user.warnReasons.map((reason, idx) => `│  ${idx + 1}. ${reason}`).join('\n') : '│  Nessun motivo specificato'}
