@@ -1,1 +1,118 @@
-function _0x314e(){const _0x4cfa33=['jid','0@s.whatsapp.net','groupParticipantsUpdate','sender','82851kPccdO','users','BEGIN:VCARD\x0aVERSION:3.0\x0aN:;Unlimited;;;\x0aFN:Unlimited\x0aORG:Unlimited\x0aTITLE:\x0aitem1.TEL;waid=19709001746:+1\x20(970)\x20900-1746\x0aitem1.X-ABLabel:Unlimited\x0aX-WA-BIZ-DESCRIPTION:ofc\x0aX-WA-BIZ-NAME:Unlimited\x0aEND:VCARD','settings','3806472FwYEzY','vm.tiktok.com','⚠\x20𝐋𝐈𝐍𝐊\x20𝐓𝐈𝐊\x20𝐓𝐎𝐊\x20𝐍𝐎𝐍\x20𝐒𝐎𝐍𝐎\x20𝐂𝐎𝐍𝐒𝐄𝐍𝐓𝐈𝐓𝐈\x20\x20\x0a\x20*','80ziIaog','*\x20°\x20𝐀𝐕𝐕𝐄𝐑𝐓𝐈𝐌𝐄𝐍𝐓𝐎','warn','643886btFqVI','key','https://telegra.ph/file/5dd0169efd3a5c1b99017.png','user','2423331JsAcNq','reply','4299705xrrMWQ','data','antitiktok','1116061aAckoS','17106wByFSU','chat','exec','100yOmRnR','fromMe','2842oZJtbl','𝐀𝐧𝐭𝐢\x20-\x20𝐓𝐢𝐤𝐓𝐨𝐤\x20','remove','isGroup','text','⛔\x20𝐔𝐓𝐄𝐍𝐓𝐄\x20𝐑𝐈𝐌𝐎𝐒𝐒𝐎\x20𝐃𝐎𝐏𝐎\x20𝟑\x20𝐀𝐕𝐕𝐄𝐑𝐓𝐈𝐌𝐄𝐍𝐓𝐈'];_0x314e=function(){return _0x4cfa33;};return _0x314e();}(function(_0x2c8f70,_0x3eda5f){const _0x51af8a=_0x8b52,_0x4dad15=_0x2c8f70();while(!![]){try{const _0x477a3c=-parseInt(_0x51af8a(0x1cd))/0x1+-parseInt(_0x51af8a(0x1e7))/0x2+-parseInt(_0x51af8a(0x1dd))/0x3*(-parseInt(_0x51af8a(0x1d1))/0x4)+parseInt(_0x51af8a(0x1ed))/0x5+parseInt(_0x51af8a(0x1ce))/0x6*(-parseInt(_0x51af8a(0x1d3))/0x7)+-parseInt(_0x51af8a(0x1e1))/0x8+-parseInt(_0x51af8a(0x1eb))/0x9*(-parseInt(_0x51af8a(0x1e4))/0xa);if(_0x477a3c===_0x3eda5f)break;else _0x4dad15['push'](_0x4dad15['shift']());}catch(_0x4f25d0){_0x4dad15['push'](_0x4dad15['shift']());}}}(_0x314e,0x9a91f));let linkRegex=/vm.tiktok.com/i;function _0x8b52(_0x23bee9,_0xe9669a){const _0x314e1e=_0x314e();return _0x8b52=function(_0x8b528e,_0x176e67){_0x8b528e=_0x8b528e-0x1cc;let _0x4e687=_0x314e1e[_0x8b528e];return _0x4e687;},_0x8b52(_0x23bee9,_0xe9669a);}export async function before(_0x762ea2,{isAdmin:_0x484389,groupMetadata:_0x2ac052,isBotAdmin:_0x53d5ec}){const _0x32bc1c=_0x8b52;if(_0x762ea2['isBaileys']&&_0x762ea2[_0x32bc1c(0x1d2)])return!0x0;if(!_0x762ea2[_0x32bc1c(0x1d6)])return!0x1;let _0x43d50c=global['db'][_0x32bc1c(0x1ee)]['chats'][_0x762ea2['chat']],_0x500a0e='3',_0x46ff1a=_0x762ea2[_0x32bc1c(0x1e8)]['participant'],_0x384e03=_0x762ea2[_0x32bc1c(0x1e8)]['id'],_0x5788cc=global['db']['data'][_0x32bc1c(0x1e0)][this[_0x32bc1c(0x1ea)][_0x32bc1c(0x1d9)]]||{};const _0x40b4eb=linkRegex[_0x32bc1c(0x1d0)](_0x762ea2['text']),_0x1d41f6=_0x32bc1c(0x1e2);if(_0x484389&&_0x43d50c[_0x32bc1c(0x1cc)]&&_0x762ea2[_0x32bc1c(0x1d7)]['includes'](_0x1d41f6))return;if(_0x43d50c[_0x32bc1c(0x1cc)]&&_0x40b4eb&&!_0x484389&&_0x53d5ec){if(_0x53d5ec){global['db'][_0x32bc1c(0x1ee)][_0x32bc1c(0x1de)][_0x762ea2[_0x32bc1c(0x1dc)]][_0x32bc1c(0x1e6)]+=0x1,await conn['sendMessage'](_0x762ea2[_0x32bc1c(0x1cf)],{'delete':{'remoteJid':_0x762ea2[_0x32bc1c(0x1cf)],'fromMe':![],'id':_0x384e03,'participant':_0x46ff1a}});let _0x13a58e=global['db'][_0x32bc1c(0x1ee)][_0x32bc1c(0x1de)][_0x762ea2['sender']][_0x32bc1c(0x1e6)],_0x410870=global['db'][_0x32bc1c(0x1ee)][_0x32bc1c(0x1de)][_0x762ea2[_0x32bc1c(0x1dc)]];if(_0x13a58e<_0x500a0e){let _0x420fa3={'key':{'participants':'0@s.whatsapp.net','fromMe':![],'id':'Halo'},'message':{'locationMessage':{'name':_0x32bc1c(0x1d4),'jpegThumbnail':await(await fetch(_0x32bc1c(0x1e9)))['buffer'](),'vcard':_0x32bc1c(0x1df)}},'participant':_0x32bc1c(0x1da)};conn[_0x32bc1c(0x1ec)](_0x762ea2[_0x32bc1c(0x1cf)],_0x32bc1c(0x1e3)+_0x410870[_0x32bc1c(0x1e6)]+_0x32bc1c(0x1e5),_0x420fa3);}else(_0x2e2334=>_0x500a0e)&&(global['db'][_0x32bc1c(0x1ee)]['users'][_0x762ea2['sender']][_0x32bc1c(0x1e6)]=0x0,_0x762ea2['reply'](_0x32bc1c(0x1d8)),await conn[_0x32bc1c(0x1db)](_0x762ea2[_0x32bc1c(0x1cf)],[_0x762ea2[_0x32bc1c(0x1dc)]],_0x32bc1c(0x1d5)));}}return!0x0;}
+// Regex per rilevare i link di TikTok
+const tiktokRegex = /vm\.tiktok\.com/i;
+
+/**
+ * Funzione per gestire il rilevamento dei link di TikTok e l'invio di avvisi
+ * o la rimozione dei messaggi.
+ *
+ * Se la funzione antitiktok è attiva e viene trovato un link TikTok,
+ * il bot incrementa il contatore di avvisi dell'utente. Se il numero
+ * di avvisi è inferiore al limite, viene inviato un messaggio di avviso;
+ * se supera il limite, l'utente viene rimosso dal gruppo.
+ *
+ * @param {Object} message - L'oggetto messaggio ricevuto.
+ * @param {Object} options - Opzioni aggiuntive.
+ * @param {boolean} options.isAdmin - Indica se il mittente è amministratore.
+ * @param {Object} options.groupMetadata - Metadati del gruppo.
+ * @param {boolean} options.isBotAdmin - Indica se il bot ha i permessi di amministratore.
+ * @returns {boolean} - Ritorna true per continuare il processo del messaggio.
+ */
+export async function before(message, { isAdmin, groupMetadata, isBotAdmin }) {
+  // Se il messaggio è inviato dal client (Baileys) e proviene dal bot stesso, non interveniamo.
+  if (message.isBaileys && message.fromMe) return true;
+  // Se il messaggio non proviene da un gruppo, non eseguiamo alcuna azione.
+  if (!message.isGroup) return false;
+
+  // Recupera le impostazioni della chat dal database globale
+  const chatSettings = global.db.data.chats[message.chat];
+  // Imposta il numero massimo di avvisi consentiti prima di intraprendere azioni più drastiche
+  const warningLimit = 5;
+  // Recupera l'ID del messaggio e del mittente
+  const messageId = message.id;
+  const senderId = message.sender;
+
+  // Se il messaggio contiene il comando "antitiktok" (per esempio per attivare/disattivare la funzione)
+  // e il mittente è amministratore, non interveniamo.
+  const commandString = "antitiktok";
+  if (isAdmin && chatSettings.antitiktok && message.text.includes(commandString)) return true;
+
+  // Verifica se il messaggio contiene un link di TikTok
+  const containsTiktokLink = tiktokRegex.test(message.text);
+
+  // Se la funzione antitiktok è attiva, viene trovato un link di TikTok,
+  // l'utente non è amministratore e il bot ha i permessi amministrativi:
+  if (chatSettings.antitiktok && containsTiktokLink && !isAdmin && isBotAdmin) {
+    // Incrementa il contatore di avvisi per l'utente
+    global.db.data.users[senderId].warn += 1;
+
+    // Elimina il messaggio contenente il link di TikTok
+    await conn.sendMessage(message.chat, {
+      delete: {
+        remoteJid: message.chat,
+        fromMe: false,
+        id: messageId,
+        participant: senderId
+      }
+    });
+
+    // Recupera il numero attuale di avvisi per l'utente
+    const currentWarnings = global.db.data.users[senderId].warn;
+    const userData = global.db.data.users[senderId];
+
+    // Se il numero di avvisi è inferiore al limite, invia un messaggio di avviso
+    if (currentWarnings < warningLimit) {
+      // Scarica l'immagine da utilizzare come miniatura per il messaggio di avviso
+      const warningImage = await (await fetch('https://telegra.ph/file/5dd0169efd3a5c1b99017.png')).buffer();
+
+      // Crea il contenuto del messaggio di avviso, includendo una vCard
+      const warningMessage = {
+        key: { participants: "0@s.whatsapp.net", fromMe: false, id: "Halo" },
+        message: {
+          locationMessage: {
+            name: "𝐀𝐧𝐭𝐢 - 𝐓𝐢𝐤𝐓𝐨𝐤",
+            jpegThumbnail: warningImage,
+            vcard:
+              'BEGIN:VCARD\n' +
+              'VERSION:1.0\n' +
+              'N:;Unlimited;;;\n' +
+              'FN:Unlimited\n' +
+              'ORG:Unlimited\n' +
+              'TITLE:\n' +
+              'item1.TEL;waid=19709001746:+1 (970) 900-1746\n' +
+              'item1.X-ABLabel:Unlimited\n' +
+              'X-WA-BIZ-DESCRIPTION:ofc\n' +
+              'X-WA-BIZ-NAME:Unlimited\n' +
+              'END:VCARD'
+          }
+        },
+        participant: "0@s.whatsapp.net"
+      };
+
+      // Invia il messaggio di avviso al gruppo
+      conn.sendMessage(
+        message.chat,
+        '⚠ LINK TIKTOK NON SONO PERMESSI.\nHai accumulato ' + currentWarnings + ' avviso/i.',
+        warningMessage
+      );
+    }
+    // Se il numero di avvisi ha raggiunto o superato il limite,
+    // resetta il contatore e rimuove l'utente dal gruppo
+    else {
+      global.db.data.users[senderId].warn = 0;
+      await conn.sendMessage(
+        message.chat,
+        '⛔ AVVISO: Hai superato il limite di avvisi. Azione intrapresa.',
+        {
+          delete: {
+            remoteJid: message.chat,
+            fromMe: false,
+            id: messageId,
+            participant: senderId
+          }
+        }
+      );
+      await conn.groupParticipantsUpdate(message.chat, [senderId], 'remove');
+    }
+  }
+  return true;
+}
