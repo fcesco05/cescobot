@@ -3,7 +3,7 @@ import path from 'path';
 
 const handler = async (message, { conn, usedPrefix }) => {
     if (global.user['id'] !== conn.user['id']) {
-        return conn.sendMessage(message.chat, { text: 'Non autorizzato.' }, { quoted: message });
+        return conn.sendMessage(message.chat, { text: 'Non sei autorizzat stai al tuo posto' }, { quoted: message });
     }
 
     await conn.sendMessage(message.chat, { text: 'Comando in esecuzione...' }, { quoted: message });
