@@ -1,95 +1,75 @@
 import { watchFile, unwatchFile } from 'fs'
 import chalk from 'chalk'
-import fs from 'fs'
 import { fileURLToPath } from 'url'
+import fs from 'fs'
+import cheerio from 'cheerio'
+import fetch from 'node-fetch'
+import axios from 'axios'
+import moment from 'moment-timezone' 
 
-global.botnumber = ""
-global.confirmCode = ""
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
+
+//BETA: Se vuoi evitare di scrivere il numero che sarà il bot nella console, aggiungilo da qui:
+//Si applica solo per l'opzione 2 (essere bot con un codice di testo di 8 cifre)
+global.botNumberCode = '' //Esempio: +393755853799 
+global.confirmCode = ''
+
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
 
 global.owner = [
-  ['3755853799', 'cescobot', true],
-  ['3792249767',],
-  ['xxxxxxxxxx'],
-  ['xxxxxxxxxx',],
-  ['xxxxxxxxxx'],
-  ['xxxxxxxxxx'],
-] //Numero degli owner
+   ['393755853799', '𝚌𝚛𝚎𝚊𝚍𝚘𝚛✐', true],
+   ['3755853799', '𝚘𝚗𝚠𝚎𝚛 ඩා', true],
 
-//────────────────────────────
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
 
-global.mods = ['xxxxxxxxxx']
-global.prems = ['xxxxxxxxxx', 'xxxxxxxxxx']
+global.mods = []
+global.prems = []
 
-//────────────────────────────
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
 
-global.keysZens = ['c2459db922', '37CC845916', '6fb0eff124']
-// 'fiktod' 'BF39D349845E' '675e34de8a' '0b917b905e6f'
-global.keysxxx = keysZens[Math.floor(keysZens.length * Math.random())]
-global.keysxteammm = ['29d4b59a4aa687ca', '5LTV57azwaid7dXfz5fzJu', 'cb15ed422c71a2fb', '5bd33b276d41d6b4'];
-global.keysxteam = keysxteammm[Math.floor(keysxteammm.length * Math.random())]
-global.keysneoxrrr = ['5VC9rvNx', 'cfALv5']
-global.keysneoxr = keysneoxrrr[Math.floor(keysneoxrrr.length * Math.random())]
-global.lolkeysapi = ['BrunoSobrino']
+//cambia a true se il bot rileva i propri comandi.
+global.isBaileysFail = false
+global.libreria = 'Baileys'
+global.baileys = 'V 6.7.8'
+global.vs = '2.0.7'
+global.languaje = 'italiano'
+global.nameqr = 'cescobot✿'
+global.namebot = 'cescobot✿ᩚ'
+global.sessions = 'cescobotSession'
+global.jadi = 'cescoJadiBot'
 
-global.APIs = {
-  xteam: 'https://api.xteam.xyz',
-  nrtm: 'https://fg-nrtm-nhie.onrender.com',
-  bg: 'http://bochil.ddns.net',
-  fgmods: 'https://api-fgmods.ddns.net',
-  dzx: 'https://api.dhamzxploit.my.id',
-  lol: 'https://api.lolhuman.xyz',
-  violetics: 'https://violetics.pw',
-  neoxr: 'https://api.neoxr.my.id',
-  zenzapis: 'https://zenzapis.xyz',
-  akuari: 'https://api.akuari.my.id',
-  akuari2: 'https://apimu.my.id',
-  fgmods: 'https://api-fgmods.ddns.net'
-},
-global.APIKeys = {
-  'https://api.xteam.xyz': `${keysxteam}`,
-  'https://api.lolhuman.xyz': '85faf717d0545d14074659ad',
-  'https://api.neoxr.my.id': `${keysneoxr}`,
-  'https://violetics.pw': 'beta',
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
+
+global.packname = 'cescobot✿'
+global.botname = 'cescobot✻'
+global.wm = 'cescobot❋'
+global.author = '𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝙱𝚢 @cesco'
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
+
+global.imagen1 = fs.readFileSync('./src/img/photo.jpg')
+global.imagen2 = fs.readFileSync('./src/img/moonbot.jpg')
+global.imagen3 = fs.readFileSync('./src/img/sinfoto.jpg')
+global.welcome = fs.readFileSync('./src/img/betatest.jpg')
+global.bye = fs.readFileSync('./src/img/betatest.jpg')
+global.catalogo = fs.readFileSync('./src/img/nuevobot.jpg')
+
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
+
+global.grupo = 'https://whatsapp.com/channel/0029Vb2xynG9MF8tPyNWoE35' //
+global.md = 'https://github.com/ilcescodicosenz/cescobot' 
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
+
+global.ch = {
+ch1: '120363198641161536@newsletter',
+ch2: '120363160031023229@newsletter',
+ch3: '120363263466636910@newsletter',
+ch4: '120363370415738881@newsletter',
 }
 
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
 
-//────────────────────────────
-global.imagen1 = ['./media/menu1.jpg']
-global.imagen4 = fs.readFileSync('./cescobot.png')
-//────────────────────────────
+global.estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(false ? { remoteJid: "5219992095479-1625305606@g.us" } : {}) }, message: { orderMessage: { itemCount : -999999, status: 1, surface : 1, message: '❀ sᥙ́⍴ᥱr ᥕһᥲ𝗍sᥲ⍴⍴ ᑲ᥆𝗍 ☄︎', orderTitle: 'Bang', thumbnail: catalogo, sellerJid: '0@s.whatsapp.net'}}}
 
-// Sticker WM (Nome del pacchetto degli sticker)
-global.packname = 'cescobot'
-global.author = 'ediz by cesco'
+//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─⋆
 
-//────────────────────────────
-
-global.vs = '1.0'
-
-global.nomebot = 'cescobot'
-
-global.multiplier = 69
-global.maxwarn = '5'
-//────────────────────────────
-
-global.wm = 'cescobot'
-global.wait = 'ⓘ 𝐂𝐚𝐫𝐢𝐜𝐚𝐦𝐞𝐧𝐭𝐨 ...'
-
-//────────────────────────────
-
-global.flaaa = [
-  'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=water-logo&script=water-logo&font',
-  'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=crafts-logo&fontsize=90&doScale=true',
-  'https://flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=amped-logo&doScale=true&scaleWidth=true',
-  'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=true',
-  'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=true'
-];
-
-//──────────────────────────────────
-
-let file = fileURLToPath(import.meta.url)
-watchFile(file, () => {
-  unwatchFile(file)
-  console.log(chalk.redBright("Update 'config.js'"))
-  import(`${file}?update=${Date.now()}`)
-})
+global.esti = { key: {participant: `0@s.whatsapp.net`, ...(false ? { remoteJid: "6289643739077-1613049930@g.us" } : {})},message: {"videoMessage": { "title": `cescobot`, "h": `Hm
