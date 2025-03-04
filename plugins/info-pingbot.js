@@ -1,67 +1,124 @@
-import os from 'os';
-import util from 'util';
-import sizeFormatter from 'human-readable';
+import { cpus as _cpus, totalmem, freemem } from 'os'
+import { performance } from 'perf_hooks'
+import { sizeFormatter } from 'human-readable'
 
-function runtime(seconds) {
-  seconds = Number(seconds);
-  const days = Math.floor(seconds / (3600 * 24));
-  const hours = Math.floor(seconds % (3600 * 24) / 3600);
-  const minutes = Math.floor(seconds % 3600 / 60);
-  const seconds = Math.floor(seconds % 60);
+let format = sizeFormatter({
+  std: 'JEDEC',
+  decimalPlaces: 2,
+  keepTrailingZeroes: false,
+  render: (literal, symbol) => `${literal} ${symbol}B`,
+})
 
-  const dayDisplay = days > 0 ? `${days} giorno${days === 1 ? '' : 'i'}, ` : '';
-  const hourDisplay = hours > 0 ? `${hours} ora${hours === 1 ? '' : 'e'}, ` : '';
-  const minuteDisplay = minutes > 0 ? `${minutes} minuto${minutes === 1 ? '' : 'i'}, ` : '';
-  const secondDisplay = seconds > 0 ? `${seconds} secondo${seconds === 1 ? '' : 'i'}` : '';
+let handler = async (m, { conn, usedPrefix, command }) => {
+  let nomeDelBot = global.db.data.nomedelbot || `cescobot`
+  let versioneBot = '1.0' // Specifica la versione del bot
+  let old = performance.now()
+  let neww = performance.now()
+  let speed = (neww - old).toFixed(2) // Limita la velocità a 2 decimali
+  let uptime = process.uptime() * 1000
 
-  return dayDisplay + hourDisplay + minuteDisplay + secondDisplay;
-}
+  // CPU info
+  const cpus = _cpus().map(cpu => {
+    cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
+    return cpu
+  })
 
-import MessageType from '@whiskeysockets/baileys';
-import fs from 'fs';
-import { performance } from 'perf_hooks';
+  const cpu = cpus.reduce((last, cpu, _, { length }) => {
+    last.total += cpu.total
+    last.speed += cpu.speed / length
+    last.times.user += cpu.times.user
+    last.times.nice += cpu.times.nice
+    last.times.sys += cpu.times.sys
+    last.times.idle += cpu.times.idle
+    last.times.irq += cpu.times.irq
+    return last
+  }, {
+    speed: 0,
+    total: 0,
+    times: {
+      user: 0,
+      nice: 0,
+      sys: 0,
+      idle: 0,
+      irq: 0
+    }
+  })
 
-async function handler(m, { conn, usedPrefix }) {
-  const uptime = runtime(process.uptime() * 1000);
+  let cpuModel = cpus[0]?.model || 'Unknown Model'
+  let cpuSpeed = cpu.speed.toFixed(2)
 
-  // Get total registered users and groups, handling potential errors gracefully
-  let totalreg = 0;
-  let groups = 0;
-  try {
-    totalreg = Object.keys(global.db.data.users).length;
-    const chats = Object.entries(conn.chats).filter(([id, data]) => id && data.isChats);
-    groups = chats.filter(([id]) => id.endsWith('@g.us')).length;
-  } catch (error) {
-    console.error('Error fetching user or group data:', error);
+  let caption = `『💬』 ══ •⊰✰⊱• ══ 『💬』
+🟢 𝐀𝐭𝐭𝐢𝐯𝐢𝐭𝐚': ${clockString(uptime)}
+🚀 𝐕𝐞𝐥𝐨𝐜𝐢𝐭𝐚': ${speed} ms
+
+💻 𝐈𝐧𝐟𝐨 𝐒𝐢𝐬𝐭𝐞𝐦𝐚:
+📊 𝐌𝐨𝐝𝐞𝐥𝐥𝐨 𝐂𝐏𝐔: ${cpuModel}
+🔄 𝐕𝐞𝐥𝐨𝐜𝐢𝐭𝐚' 𝐂𝐏𝐔: ${cpuSpeed} MHz
+
+💾 𝐌𝐞𝐦𝐨𝐫𝐢𝐚:
+🟣 𝐑𝐀𝐌: ${format(totalmem() - freemem())} / ${format(totalmem())}
+🔵 𝐑𝐀𝐌 𝐋𝐢𝐛𝐞𝐫𝐚: ${format(freemem())}
+『💬』 ══ •⊰✰⊱• ══ 『💬』`
+
+  const profilePictureUrl = await fetchProfilePictureUrl(conn, m.sender)
+
+  let messageOptions = {
+    contextInfo: {
+      forwardingScore: 999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363259442839354@newsletter',
+        serverMessageId: '',
+        newsletterName: `${nomeDelBot}`
+      }
+    }
   }
 
-  const used = process.memoryUsage();
-  const { restrict } = global.db.data.settings[conn.user.jid] || {};
-  const { autoread } = global.opts;
+  if (profilePictureUrl !== 'default-profile-picture-url') {
+    messageOptions.contextInfo.externalAdReply = {
+      title: nomeDelBot,
+      body: `Versione: ${versioneBot}`,
+      mediaType: 1,
+      renderLargerThumbnail: false,
+      previewType: 'thumbnail',
+      thumbnail: await fetchThumbnail('https://i.ibb.co/HpkzmrMZ/cescobot.jpg'),
+    }
+  }
 
-  const start = performance.now();
-  const end = performance.now();
-  const speed = (end - start).toFixed(4);  
-
-  const info = `
-ꪶ⏳ꫂ͛ ══ •⊰✰⊱• ══ ꪶ⏳ꫂ͛
-
-  cescobot ꪶ⏳ꫂ͛ 𝐁𝐎𝐓 ꙰
-
-  **𝐀𝐓𝐓𝐈𝐕𝐈𝐓𝐀':** ${uptime}
-  **𝐕𝐄𝐋𝐎𝐂𝐈𝐓𝐀':** ${speed} ms
-  **𝐔𝐓𝐄𝐍𝐓𝐈 𝐑𝐄𝐆𝐈𝐒𝐓𝐑𝐀𝐓𝐈:** ${totalreg}
-  **𝐆𝐑𝐔𝐏𝐏𝐈:** ${groups}
-
-  ꪶ⏳ꫂ͛ ══ •⊰✰⊱• ══ ꪶ⏳ꫂ͛
-  `.trim();
-
-  conn.reply(m.chat, info, m);
+  await conn.sendMessage(m.chat, {
+    text: caption,
+    ...messageOptions
+  })
 }
 
-handler.help = ['infobot', 'speed'];
-handler.tags = ['info', 'tools'];
-handler.command = /^(ping|speed|infobot|pingtest)$/i;
+async function fetchProfilePictureUrl(conn, sender) {
+  try {
+    return await conn.profilePictureUrl(sender)
+  } catch (error) {
+    return 'default-profile-picture-url' // Fallback URL in case of error
+  }
+}
 
-export default handler;
+async function fetchThumbnail(url) {
+  try {
+    const response = await fetch(url)
+    const buffer = await response.buffer()
+    return buffer
+  } catch (error) {
+    return 'default-thumbnail' // Fallback thumbnail in case of error
+  }
+}
 
+handler.help = ['ping', 'speed']
+handler.tags = ['info', 'tools']
+handler.command = /^(ping)$/i
+
+export default handler
+
+function clockString(ms) {
+  let d = Math.floor(ms / 86400000)
+  let h = Math.floor(ms / 3600000) % 24
+  let m = Math.floor(ms / 60000) % 60
+  let s = Math.floor(ms / 1000) % 60
+  return [d, h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
+}
