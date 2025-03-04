@@ -1,49 +1,62 @@
-import { performance } from "perf_hooks";
-
-let lastUsed = {};
-const cooldown = 10000; // 10 secondi di cooldown
+import { performance } from 'perf_hooks'
 
 let handler = async (m, { conn, text }) => {
-    let user = text || "qualcuno";
-    let chatId = m.chat;
-    let now = Date.now();
+  // Get bot name from database or use default
+  let nomeDelBot = global.db.data.nomedelbot || `cescobot`
 
-    // Controllo anti-spam
-    if (lastUsed[chatId] && now - lastUsed[chatId] < cooldown) {
-        return m.reply("⏳ Aspetta un attimo prima di usarlo di nuovo!");
+  // Animation messages
+  let messages = [
+    `Ora faccio un ditalino a ${text}`,
+    `ㅤ\n✌🏻`,
+    `👆🏻\nㅤ`,
+    `☝🏻\nㅤ`,
+    `ㅤ\n🤟🏻`,
+    `👋🏻\nㅤ`,
+    `ㅤ\n✌🏻`,
+    `🤟🏻\nㅤ`,
+    `☝🏻\nㅤ`, 
+    `ㅤ\n☝🏻`,
+    `ㅤ\n👆🏻`,
+    `ㅤ\n👋🏻`
+  ]
+
+  // Send animation messages
+  for (let msg of messages) {
+    await conn.sendMessage(m.chat, {
+      text: msg,
+      contextInfo: {
+        forwardingScore: 99,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363259442839354@newsletter',
+          serverMessageId: '',
+          newsletterName: `${nomeDelBot}`
+        }
+      }
+    }, { quoted: m })
+  }
+
+  // Final message
+  let start = performance.now()
+  let end = performance.now()
+  let time = `${end - start}`
+  let final = `Oh ${text} è venuta!🥵`
+
+  await conn.sendMessage(m.chat, {
+    text: final,
+    contextInfo: {
+      forwardingScore: 99,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363259442839354@newsletter',
+        serverMessageId: '',
+        newsletterName: `${nomeDelBot}`
+      }
     }
-    lastUsed[chatId] = now;
+  }, { quoted: m })
+}
 
-    let messages = [
-        `🤟🏻 Ora faccio un ditalino a *${user}*...`,
-        "👆🏻 Inizio ad infilare le dita!", 
-        "✌🏻 Ora ne metto 3...", 
-        "☝🏻 Quasi fatto...", 
-        "✌🏻 È il momento giusto!", 
-        "👋🏻 Fatto?", 
-        "👋🏻 Un attimo ancora...", 
-        "✌🏻 Wow, sembra promettere bene!", 
-        "🤟🏻 Ora ci siamo...", 
-        "☝🏻 Non ci credo!", 
-        "🤟🏻 Epico!", 
-        "👋🏻 Ohsshyy, ancora più veloce, ahhhh!"
-    ];
-    
-    for (let msg of messages) {
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Ritardo tra i messaggi
-        await m.reply(msg);
-    }
+handler.command = ['ditalino']
+handler.tags = ['fun']
 
-    let startTime = performance.now();
-    let endTime = performance.now();
-    let elapsed = (endTime - startTime).toFixed(2);
-    let finalMessage = `✨ *${user}* è venuta! 🥵 Dopo *${elapsed}ms*!`;
-
-    conn.reply(m.chat, finalMessage, m);
-};
-
-handler.help = ["ditalino"];
-handler.tags = ["fun"];
-handler.command = ["ditalino"];
-
-export default handler;
+export default handler
