@@ -45,6 +45,5 @@ let handler = async (m, { conn, text }) => {
 handler.help = ["ditalino"];
 handler.tags = ["fun"];
 handler.command = ["ditalino"];
-handler.group = true; // Permesso nei gruppi
 
 export default handler;
