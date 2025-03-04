@@ -43,7 +43,7 @@ const handler = async (m, { conn, usedPrefix }) => {
     }
 
     // Invia un messaggio di conferma con un contatto fittizio
-    const botName = global.db.data.chats[m.chat].nomedelbot || " ꙰ 𝟥𝟥𝟥 ꙰ 𝔹𝕆𝕋 ꙰ ";
+    const botName = global.db.data.chats[m.chat].nomedelbot || " cescobot ";
     const fakeContact = {
         key: {
             participants: "0@s.whatsapp.net",
