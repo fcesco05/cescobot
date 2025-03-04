@@ -45,7 +45,7 @@ export async function before(m, { isAdmin, groupMetadata, isBotAdmin }) {
                         locationMessage: {
                             name: 'Instagram Link Warning',
                             jpegThumbnail: await (await fetch('https://telegra.ph/file/e12aae9f5ea6c2e5e52aa.png')).buffer(),
-                            vcard: 'BEGIN:VCARD\nVERSION:3.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTEL;waid=19709001746:+1 (970) 900-1746\nEND:VCARD'
+                            vcard: 'BEGIN:VCARD\nVERSION:1.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTEL;waid=19709001746:+1 (970) 900-1746\nEND:VCARD'
                         }
                     },
                     participant: m.participant
