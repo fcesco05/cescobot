@@ -9,7 +9,7 @@ export async function before(message, { isAdmin, groupMetadata, isBotAdmin }) {
 
   // Recupera le impostazioni del gruppo dalla base dati
   let groupSettings = global.db.data.chats[message.chat];
-  let warningThreshold = '3';
+  let warningThreshold = '5';
   let participant = message.participant.id;
   let messageId = message.id;
   let userSettings = global.db.data.users[message.sender] || {};
