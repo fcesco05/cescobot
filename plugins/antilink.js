@@ -1,57 +1,33 @@
 const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
+export async function before(m, {conn, isAdmin, isBotAdmin}) {
+  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje 
+  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
+  const tradutor = _translate.plugins._antilink
 
-export async function before(message, { isAdmin, isBotAdmin }) {
-    if (message.isBaileys && message.fromMe) return true;
-    if (!message.isGroup) return false;
-    
-    let chatSettings = global.db.data.chats[message.chat];
-    let senderId = message.key.participant;
-    let messageId = message.key.id;
-    let groupSettings = global.db.data.settings[this.user.jid] || {};
-    
-    const foundLink = linkRegex.exec(message.text);
-    const whatsappGroupUrl = "https://chat.whatsapp.com";
-    
-    if (isAdmin && chatSettings.antiLink && message.text.includes(whatsappGroupUrl)) return;
-    
-    if (chatSettings.antiLink && foundLink && !isAdmin) {
-        if (isBotAdmin) {
-            const botInviteLink = "https://chat.whatsapp.com/" + await this.groupInviteCode(message.chat);
-            if (message.text.includes(botInviteLink)) return true;
-        }
-
-        if (isBotAdmin && groupSettings.restrict) {
-            let warningMessage = {
-                key: {
-                    fromMe: false,
-                    id: messageId,
-                    participant: senderId,
-                },
-                message: {
-                    locationMessage: {
-                        name: "Anti-Link Alert",
-                        jpegThumbnail: await (await fetch("https://telegra.ph/file/a3b727e38149464863380.png")).buffer(),
-                    }
-                }
-            };
-            
-            conn.sendMessage(message.chat, "⚠ LINK DI ALTRI GRUPPI NON SONO CONSENTITI", warningMessage);
-            
-            await conn.sendMessage(message.chat, {
-                delete: {
-                    remoteJid: message.chat,
-                    fromMe: false,
-                    id: messageId,
-                    participant: senderId,
-                }
-            });
-            
-            let removalResponse = await conn.groupParticipantsUpdate(message.chat, [senderId], 'remove');
-            if (removalResponse[0]?.status === "404") return;
-        } else {
-            if (!groupSettings.restrict) return;
-        }
+  if (m.isBaileys && m.fromMe) {
+    return !0;
+  }
+  if (!m.isGroup) return !1;
+  const chat = global.db.data.chats[m.chat];
+  const delet = m.key.participant;
+  const bang = m.key.id;
+  const bot = global.db.data.settings[this.user.jid] || {};
+  const user = `@${m.sender.split`@`[0]}`;
+  const isGroupLink = linkRegex.exec(m.text);
+  const grupo = `https://chat.whatsapp.com`;
+  if (isAdmin && chat.antiLink && m.text.includes(grupo)) return m.reply(tradutor.texto1.replace('@user', '@' + user.split('@')[0]));
+  if (chat.antiLink && isGroupLink && !isAdmin) {
+    if (isBotAdmin) {
+      const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
+      if (m.text.includes(linkThisGroup)) return !0;
     }
-    
-    return true;
+    await this.sendMessage(m.chat, {text: tradutor.texto2.replace('@user', '@' + user.split('@')[0]), mentions: [m.sender]}, {quoted: m});
+    if (!isBotAdmin) return m.reply(tradutor.texto3);
+    if (isBotAdmin && bot.restrict) {
+      await conn.sendMessage(m.chat, {delete: {remoteJid: m.chat, fromMe: false, id: bang, participant: delet}});
+      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      if (responseb[0].status === '404') return;
+    } else if (!bot.restrict) return m.reply(tradutor.texto4);
+  }
+  return !0;
 }
