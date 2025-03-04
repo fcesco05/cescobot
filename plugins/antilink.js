@@ -1,33 +1,29 @@
-const linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
-export async function before(m, {conn, isAdmin, isBotAdmin}) {
-  const idioma = global.db.data.users[m.sender].language || global.defaultLenguaje 
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins._antilink
+let linkRegex = /(https?:\/\/(?:www\.)?(?:t\.me|telegram\.me|whatsapp\.com)\/\S+)|(https?:\/\/chat\.whatsapp\.com\/\S+)|(https?:\/\/whatsapp\.com\/channel\/\S+)/i
 
-  if (m.isBaileys && m.fromMe) {
-    return !0;
-  }
-  if (!m.isGroup) return !1;
-  const chat = global.db.data.chats[m.chat];
-  const delet = m.key.participant;
-  const bang = m.key.id;
-  const bot = global.db.data.settings[this.user.jid] || {};
-  const user = `@${m.sender.split`@`[0]}`;
-  const isGroupLink = linkRegex.exec(m.text);
-  const grupo = `https://chat.whatsapp.com`;
-  if (isAdmin && chat.antiLink && m.text.includes(grupo)) return m.reply(tradutor.texto1.replace('@user', '@' + user.split('@')[0]));
+export async function before(m, { isAdmin, isBotAdmin }) {
+  if (m.isBaileys && m.fromMe)
+    return !0
+  if (!m.isGroup) return !1
+  let chat = global.db.data.chats[m.chat]
+  let delet = m.key.participant
+  let bang = m.key.id
+  let bot = global.db.data.settings[this.user.jid] || {}
+  const isGroupLink = linkRegex.exec(m.text)
+  const grupo = `https://chat.whatsapp.com`
+  if (isAdmin && chat.antiLink && m.text.includes(grupo))
+    return conn.reply(m.chat, `🏷 *Ehi!! l'anti link è attivo, ma sei admin, sei salvo!*`, m, rcanal)
   if (chat.antiLink && isGroupLink && !isAdmin) {
     if (isBotAdmin) {
-      const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
-      if (m.text.includes(linkThisGroup)) return !0;
+      const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`
+      if (m.text.includes(linkThisGroup)) return !0
     }
-    await this.sendMessage(m.chat, {text: tradutor.texto2.replace('@user', '@' + user.split('@')[0]), mentions: [m.sender]}, {quoted: m});
-    if (!isBotAdmin) return m.reply(tradutor.texto3);
-    if (isBotAdmin && bot.restrict) {
-      await conn.sendMessage(m.chat, {delete: {remoteJid: m.chat, fromMe: false, id: bang, participant: delet}});
-      const responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
-      if (responseb[0].status === '404') return;
-    } else if (!bot.restrict) return m.reply(tradutor.texto4);
+    await conn.reply(m.chat, `📎 *Link rilevato!*\n\n*${await this.getName(m.sender)} hai inviato un link proibito, perciò verrai rimosso*`, m, rcanal)
+    if (!isBotAdmin) return conn.reply(m.chat, `🌼 *Non sono admin, non posso eliminare intrusi*`, m, rcanal)
+    if (isBotAdmin) {
+      await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
+      await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+    } else if (!bot.restrict)
+      return conn.reply(m.chat, `*Questa funzionalità è disattivata!*`, m, rcanal)
   }
-  return !0;
+  return !0
 }
