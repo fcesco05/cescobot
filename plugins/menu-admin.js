@@ -1,122 +1,130 @@
-import 'os';
-import 'util';
-import 'human-readable';
-import '@whiskeysockets/baileys';
-import 'fs';
-import 'perf_hooks';
+// Import delle librerie necessarie
+import os from 'os';
+import util from 'util';
+import humanReadable from 'human-readable';
+import baileys from '@whiskeysockets/baileys';
+import fs from 'fs';
+import { performance } from 'perf_hooks';
 
-let handler = async (_0x4955de, { conn: _0x4b9a49, usedPrefix: _0xeb2cc9 }) => {
-  let _0x414c2d = {
-    'key': {
-      'participants': "0@s.whatsapp.net",
-      'fromMe': false,
-      'id': 'Halo'
+/**
+ * Funzione di utilità per convertire millisecondi in formato "hh:mm:ss"
+ * @param {number} ms - Millisecondi da convertire
+ * @returns {string} Tempo formattato come "hh:mm:ss"
+ */
+function clockString(ms) {
+  let h = Math.floor(ms / 3600000);
+  let m = Math.floor(ms / 60000) % 60;
+  let s = Math.floor(ms / 1000) % 60;
+  console.log({ ms, h, m, s });
+  return [h, m, s].map(unit => unit.toString().padStart(2, '0')).join(':');
+}
+
+/**
+ * Handler per il comando "menuadm" / "admin"
+ * Mostra un menu amministrativo con informazioni sul bot e comandi disponibili.
+ * 
+ * @param {Object} message - Oggetto del messaggio ricevuto
+ * @param {Object} param1 - Oggetto contenente il riferimento alla connessione e il prefisso usato
+ * @param {Object} param1.conn - Istanza della connessione (client WhatsApp)
+ * @param {string} param1.usedPrefix - Prefisso utilizzato per il comando
+ */
+const handler = async (message, { conn, usedPrefix }) => {
+  // Calcola l'uptime del processo (in millisecondi) e lo formatta
+  const uptimeMs = process.uptime() * 1000;
+  const uptimeStr = clockString(uptimeMs);
+
+  // Ottieni il numero totale di utenti dal database globale
+  const totalUsers = Object.entries(global.db.data.users).length;
+
+  // Ottieni la lista di tutte le chat dalla connessione
+  const allChats = Object.entries(conn.chats).filter(([jid, chat]) => jid && chat.isChats);
+  // Separa le chat di gruppo e quelle private
+  const groupChats = allChats.filter(([jid]) => jid.endsWith('@g.us'));
+  const privateChats = allChats.filter(([jid]) => jid.includes('@s.whatsapp.net'));
+
+  // Ottieni alcune statistiche di sistema
+  const memoryUsage = process.memoryUsage();
+  // Recupera le impostazioni del bot (ad es. restrizioni) per l'utente corrente
+  const settings = global.db.data.settings[conn.user.jid] || {};
+  const { restrict } = settings;
+  // Altre impostazioni globali, per esempio l'autoread
+  const { autoread } = global;
+
+  // Misura la latenza (tempo di risposta) in millisecondi
+  const startTime = performance.now();
+  const endTime = performance.now();
+  const latency = endTime - startTime;
+
+  // Esempio di recupero di qualche dato (ad es. il nome dell'utente)
+  const senderName = await conn.getName(message.sender);
+
+  // Costruisci un messaggio "quotato" che verrà usato per dare un effetto banner
+  const quotedMsg = {
+    key: {
+      // Imposta un partecipante fittizio
+      participants: '0@s.whatsapp.net',
+      fromMe: false,
+      id: 'Halo'
     },
-    'message': {
-      'locationMessage': {
-        'name': "𝐌𝐞𝐧𝐮 𝐀𝐝𝐦𝐢𝐧",
-        'jpegThumbnail': await (await fetch("https://qu.ax/cSqEs.jpg")).buffer(),
-        'vcard': "BEGIN:VCARD\nVERSION:1.0\nN:;Unlimited;;;\nFN:Unlimited\nORG:Unlimited\nTITLE:\nitem1.TEL;waid=393755853799:+39 375 585 3799\nitem1.X-ABLabel:Unlimited\nX-WA-BIZ-DESCRIPTION:ofc\nX-WA-BIZ-NAME:Unlimited\nEND:VCARD"
+    message: {
+      locationMessage: {
+        name: '𝐌𝐞𝐧𝐮 Admin',
+        // Scarica l'immagine da usare come thumbnail
+        jpegThumbnail: await (await fetch('https://i.ibb.co/HpkzmrMZ/cescobot.jpg')).buffer(),
+        // VCard (contatto) fittizio
+        vcard: `BEGIN:VCARD
+VERSION:1.0
+N:;Unlimited;;;
+FN:Unlimited
+ORG:Unlimited
+TITLE:
+item1.TEL;waid=19709001746:+1 (970) 900-1746
+item1.X-ABLabel:Unlimited
+X-WA-BIZ-DESCRIPTION:ofc
+X-WA-BIZ-NAME:Unlimited
+END:VCARD`
       }
     },
-    'participant': "0@s.whatsapp.net"
+    participant: '0@s.whatsapp.net'
   };
-  
-  let _0x259d4e = `
-╭━━━━━━━━━━━━━━━━━━━━━━
-│ 👑 **𝐌𝐞𝐧𝐮 𝐀𝐝𝐦𝐢𝐧** 👑
-╰━━━━━━━━━━━━━━━━━━━━━━
 
-🔧 **Comandi Amministrativi**:
+  // Costruisci il testo del menu amministrativo
+  let menuText = (
+    '\n『💬』 ══ •⊰✰⊱• ══ 『💬』\n' +
+    '- ' + usedPrefix + 'command1  - Descrizione comando 1\n' +
+    '- ' + usedPrefix + 'command2  - Descrizione comando 2\n' +
+    '- ' + usedPrefix + 'command3  - Descrizione comando 3\n' +
+    '- ' + usedPrefix + 'command4  - Descrizione comando 4\n' +
+    '\nUptime: ' + uptimeStr +
+    '\nUtenti totali: ' + totalUsers +
+    '\nChat di gruppo: ' + groupChats.length +
+    '\nChat private: ' + privateChats.length +
+    '\nLatenza: ' + latency.toFixed(2) + ' ms'
+  ).trim();
 
-➤ ${_0xeb2cc9}𝐩𝐫𝐨𝐦𝐮𝐨𝐯𝐢 / 𝐩 - **Promuovi utente**
-➤ ${_0xeb2cc9}𝐫𝐞𝐭𝐫𝐨𝐜𝐞𝐝𝐢 / 𝐫 - **Retrocedi utente**
-➤ ${_0xeb2cc9}𝐰𝐚𝐫𝐧 / 𝐮𝐧𝐰𝐚𝐫𝐧 - **Aggiungi/Rimuovi Warn**
-➤ ${_0xeb2cc9}𝐦𝐮𝐭𝐚 / 𝐬𝐦𝐮𝐭𝐚 - **Mute utente**
-➤ ${_0xeb2cc9}𝐦𝐮𝐭𝐞𝐥𝐢𝐬𝐭 - **Disabilita audio**
-➤ ${_0xeb2cc9}𝐡𝐢𝐝𝐞𝐭𝐚𝐠 - **Nascondi tag**
-➤ ${_0xeb2cc9}𝐭𝐚𝐠𝐚𝐥𝐥 - **Tagga utente**
+  // Nome del bot preso dalle impostazioni, oppure un valore di default
+  const botName = global.db.data.settings[conn.user.jid]?.nomedelbot || 'ChatUnity-Bot';
 
-🔐 **Protezione & Sicurezza**:
-
-➤ ${_0xeb2cc9}blocca / proteggi - **Blocca o proteggi utente**
-➤ ${_0xeb2cc9}𝐬𝐞𝐭𝐰𝐞𝐥𝐜𝐨𝐦𝐞 - **Imposta messaggio di benvenuto**
-➤ ${_0xeb2cc9}𝐬𝐞𝐭𝐛𝐲𝐞 - **Imposta messaggio di uscita**
-➤ ${_0xeb2cc9}𝐢𝐧𝐚𝐭𝐭𝐢𝐯𝐢 - **Visualizza utenti inattivi**
-➤ ${_0xeb2cc9}𝐥𝐢𝐬𝐭𝐚𝐧𝐮𝐦 + 𝐩𝐫𝐞𝐟𝐢𝐬𝐬𝐨 - **Visualizza lista utenti (con prefisso)**
-
-🛠️ **Gestione & Personalizzazione**:
-
-➤ ${_0xeb2cc9}𝐩𝐮𝐥𝐢𝐳𝐢𝐚 + 𝐩𝐫𝐞𝐟𝐢𝐬𝐬𝐨 - **Pulisci utenti con prefisso**
-➤ ${_0xeb2cc9}𝐫𝐢𝐦𝐨𝐳𝐢𝐨𝐧𝐞𝐢𝐧𝐚𝐭𝐭𝐢𝐯𝐢 - **Rimuovi utenti inattivi**
-➤ ${_0xeb2cc9}𝐬𝐢𝐦 - **Simula operazioni**
-➤ ${_0xeb2cc9}𝐬𝐭𝐮𝐩𝐫𝐚 - **Stupro simulato**
-➤ ${_0xeb2cc9}𝐚𝐝𝐦𝐢𝐧𝐬 - **Visualizza lista amministratori**
-➤ ${_0xeb2cc9}𝐟𝐫𝐞𝐞𝐳𝐞 @ - **Congela utente (deve essere menzionato)**
-
-📊 **Statistiche & Monitoraggio**:
-
-➤ ${_0xeb2cc9}𝐢𝐬𝐩𝐞𝐳𝐢𝐨𝐧𝐚 (𝐥𝐢𝐧𝐤) - **Esamina link**
-➤ ${_0xeb2cc9}𝐭𝐨𝐩 (10,50,100) - **Visualizza top utenti (fino a 100)**
-
-💡 **Funzioni Speciali**:
-
-➤ ${_0xeb2cc9}𝐭𝐨𝐩𝐬𝐞𝐱𝐲 - **Visualizza top sexy**
-➤ ${_0xeb2cc9}𝐭𝐨𝐩𝐭𝐫𝐨𝐢𝐞 - **Visualizza top troie**
-➤ ${_0xeb2cc9}𝐩𝐢𝐜 @ - **Invia foto di un utente (deve essere menzionato)**
-
-🔧 **Impostazioni & Personalizzazioni**:
-
-➤ ${_0xeb2cc9}𝐬𝐞𝐭𝐰𝐞𝐥𝐜𝐨𝐦𝐞 - **Imposta benvenuto**
-➤ ${_0xeb2cc9}𝐬𝐞𝐭𝐛𝐲𝐞 - **Imposta addio**
-➤ ${_0xeb2cc9}𝐧𝐨𝐦𝐞 <𝐭𝐞𝐬𝐭𝐨> - **Modifica nome bot**
-➤ ${_0xeb2cc9}𝐛𝐢𝐨 <𝐭𝐞𝐬𝐭𝐨> - **Modifica bio bot**
-➤ ${_0xeb2cc9}𝐥𝐢𝐧𝐤𝐪𝐫 - **Modifica link QR**
-➤ ${_0xeb2cc9}closetime *Tempo chiusura gruppo*
-
-🔒 **Privacy & Sicurezza**:
-
-➤ ${_0xeb2cc9}segreto - **Modalità segreta**
-➤ ${_0xeb2cc9}silenzio - **Modalità silenziosa**
-
-─────────────
-     *cescobot*
-════════════════════
-`.trim();
-  
-  let _0xf5c7c0 = global.db.data.nomedelbot || "cescobot";
-  
-  _0x4b9a49.sendMessage(_0x4955de.chat, {
-    'text': _0x259d4e,
-    'contextInfo': {
-      'mentionedJid': _0x4b9a49.parseMention(wm),
-      'forwardingScore': 0x1,
-      'isForwarded': true,
-      'forwardedNewsletterMessageInfo': {
-        'newsletterJid': "120363341274693350@newsletter",
-        'serverMessageId': '',
-        'newsletterName': _0xf5c7c0
+  // Invia il messaggio con informazioni contestuali (ad esempio, menzionando i contatti)
+  conn.sendMessage(message.chat, {
+    text: menuText,
+    contextInfo: {
+      // Menziona tutti gli utenti presenti nel testo (se necessario)
+      mentionedJid: conn.parseMention(menuText),
+      forwardingScore: 1,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363259442839354@newsletter',
+        serverMessageId: '',
+        newsletterName: '' + botName
       }
     }
-  }, {
-    'quoted': _0x414c2d
-  });
+  }, { quoted: quotedMsg });
 };
 
-handler.help = ["menu"];
-handler.tags = ["menu"];
+// Configurazioni del comando handler
+handler.help = ['menuadm'];
+handler.tags = ['menuadm'];
 handler.command = /^(menuadm|admin)$/i;
-export default handler;
 
-function clockString(_0x5dad08) {
-  let _0x233c78 = Math.floor(_0x5dad08 / 3600000);
-  let _0x2b10bc = Math.floor(_0x5dad08 / 60000) % 60;
-  let _0x2c7d73 = Math.floor(_0x5dad08 / 1000) % 60;
-  console.log({
-    'ms': _0x5dad08,
-    'h': _0x233c78,
-    'm': _0x2b10bc,
-    's': _0x2c7d73
-  });
-  return [_0x233c78, _0x2b10bc, _0x2c7d73].map(_0x4bd0ef => _0x4bd0ef.toString().padStart(2, 0)).join(':');
-}
+export default handler;
