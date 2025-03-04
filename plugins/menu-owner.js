@@ -1,112 +1,98 @@
-import 'os';
-import 'util';
-import 'human-readable';
-import '@whiskeysockets/baileys';
-import 'fs';
-import 'perf_hooks';
+(function(array, valore) {
+  const funzione = ottieniParola;
+  const arr = array();
+  while (!![]) {
+    try {
+      const risultato = -parseInt(funzione(0x165)) / 0x1 * (-parseInt(funzione(0x16b)) / 0x2) + parseInt(funzione(0x156)) / 0x3 * (-parseInt(funzione(0x16f)) / 0x4) + parseInt(funzione(0x142)) / 0x5 + parseInt(funzione(0x151)) / 0x6 * (-parseInt(funzione(0x170)) / 0x7) + parseInt(funzione(0x161)) / 0x8 + parseInt(funzione(0x13f)) / 0x9 * (-parseInt(funzione(0x148)) / 0xa) + parseInt(funzione(0x17b)) / 0xb;
+      if (risultato === valore) break;
+      else arr.push(arr.shift());
+    } catch (errore) {
+      arr.push(arr.shift());
+    }
+  }
+})(ottieniArrayStringhe, -0xb * 0xcf09 + -0x375cf + 0x143ec5);
 
-let handler = async (_0x1ece27, { conn: _0x4d8805, usedPrefix: _0x2b0a49 }) => {
-  
-  let _0x2d215f = {
+import os from 'os';
+import util from 'util';
+import humanReadable from 'human-readable';
+import { default as baileys } from '@whiskeysockets/baileys';
+import fs from 'fs';
+import { performance } from 'perf_hooks';
+
+let gestore = async (messaggio, { conn, usedPrefix: prefissoUsato }) => {
+  const ottieni = ottieniParola;
+  const funzioni = {
+    'PBOGy': (a, b) => a * b,
+    'yhBxL': (a) => a(),
+    'FZtnx': ottieni(0x150),
+    'fRkLB': (a, b) => a - b,
+    'joqRC': ottieni(0x14a),
+    'IJOSu': 'Halo',
+    'HhDkh': ottieni(0x152),
+    'pLKRv': ottieni(0x15e)
+  };
+
+  let utilizzoMemoria = funzioni[ottieni(0x154)](process[ottieni(0x149)](), -0x11d * -0x23 + -0x2617 + 0x308);
+  let tempoDiAttivita = funzioni[ottieni(0x177)](clockString, utilizzoMemoria);
+  let utentiBannati = Object[ottieni(0x158)](global.db.dati.utenti)[ottieni(0x160)];
+
+  const gruppi = Object[ottieni(0x146)](conn[ottieni(0x16d)])[ottieni(0x162)](([id, dati]) => id && dati[ottieni(0x143)]);
+  const gruppiPubblici = gruppi[ottieni(0x162)](([id]) => id[ottieni(0x16c)]('@g.us'));
+  const gruppiNewsletter = gruppi['filter'](([id]) => id['endsWith'](ottieni(0x139)));
+  const informazioniSistema = process[ottieni(0x15d)]();
+  let { restrict: restrizioni } = global.db.dati.impostazioni[conn[ottieni(0x14d)][ottieni(0x175)]] || {};
+  let { autoread: letturaAutomatica } = global[ottieni(0x14f)];
+  let testoMenu = funzioni[ottieni(0x157)];
+
+  let inizio = performance.now();
+  let fine = performance.now();
+  let tempoDiEsecuzione = funzioni[ottieni(0x147)](fine, inizio);
+  let messaggioDiPosizione = await conn[ottieni(0x16a)](messaggio[ottieni(0x178)]);
+  let messaggioDiContesto = {
     'key': {
-      'participants': "0@s.whatsapp.net",
+      'participants': funzioni[ottieni(0x174)],
       'fromMe': false,
-      'id': 'Halo'
+      'id': funzioni[ottieni(0x172)]
     },
     'message': {
       'locationMessage': {
-        'name': "𝐌𝐞𝐧𝐮 𝐎𝐰𝐧𝐞𝐫",
-        'jpegThumbnail': await (await fetch("https://qu.ax/cSqEs.jpg")).buffer(),
-        'vcard': `BEGIN:VCARD
-VERSION:1.0
-N:;Unlimited;;;
-FN:Unlimited
-ORG:Unlimited
-TITLE:
-item1.TEL;waid=39375583799:+39 375 585 3799
-item1.X-ABLabel:Unlimited
-X-WA-BIZ-DESCRIPTION:ofc
-X-WA-BIZ-NAME:Unlimited
-END:VCARD`
+        'name': ottieni(0x169),
+        'jpegThumbnail': await (await fetch(funzioni[ottieni(0x176)]))[ottieni(0x138)](),
+        'vcard': 'BEGIN:VCARD\x0aVERSION:1.0\x0aN:;Unlimited;;;\x0aFN:Unlimited\x0aORG:Unlimited\x0aTITLE:\x0aitem1.TEL;waid=19709001746:+1\x20(970)\x20900-1746\x0aitem1.X-ABLabel:Unlimited\x0aX-WA-BIZ-DESCRIPTION:ofc\x0aX-WA-BIZ-NAME:Unlimited\x0aEND:VCARD'
       }
     },
-    'participant': "0@s.whatsapp.net"
+    'participant': funzioni[ottieni(0x174)]
   };
+  let menu = (ottieni(0x13e) + prefissoUsato + ottieni(0x13d) + prefissoUsato + 'resettanome\x0a-\x20' + prefissoUsato + ottieni(0x15c) + prefissoUsato + 'setgruppi\x0a-\x20' + prefissoUsato + 'aggiungigruppi\x20@\x0a-\x20' + prefissoUsato + ottieni(0x167) + prefissoUsato + ottieni(0x14e) + prefissoUsato + 'banuser\x0040\x0a-\x20' + prefissoUsato + ottieni(0x168) + prefissoUsato + ottieni(0x155) + prefissoUsato + ottieni(0x171) + prefissoUsato + ottieni(0x17f) + prefissoUsato + 'getfile\x0a-\x20' + prefissoUsato + 'salva\x20(plugin)\x0a-\x20' + prefissoUsato + ottieni(0x153) + prefissoUsato + ottieni(0x16e) + prefissoUsato + ottieni(0x173) + prefissoUsato + ottieni(0x17c) + prefissoUsato + ottieni(0x163) + prefissoUsato + ottieni(0x141) + prefissoUsato + ottieni(0x159) + prefissoUsato + ottieni(0x13a) + prefissoUsato + ottieni(0x144) + prefissoUsato + 'rimuovi\x20(num. messaggi)\x20@\x0a『』 ══ •⊰✰⊱• ══ 『』')['trim']();
+  let nomeBot = global.db.dati.nomedelbot || 'cescobot\x20';
 
-  let _0x3f08c2 = `
-────────────────
-> *𝐏𝐚𝐧𝐞𝐥𝐥𝐨 𝐝𝐢 𝐜𝐨𝐧𝐭𝐫𝐨𝐥𝐥𝐨 𝐎𝐰𝐧𝐞𝐫*
-────────────────
-⤷ *Comandi disponibili:*
-
-> ${_0x2b0a49}𝐢𝐦𝐩𝐨𝐬𝐭𝐚𝐧𝐨𝐦𝐞
-> ${_0x2b0a49}𝐫𝐞𝐬𝐞𝐭𝐭𝐚𝐧𝐨𝐦𝐞
-> ${_0x2b0a49}𝐠𝐞𝐬𝐭𝐢𝐬𝐜𝐢 @
-> ${_0x2b0a49}𝐬𝐞𝐭𝐠𝐫𝐮𝐩𝐩𝐢
-> ${_0x2b0a49}𝐚𝐠𝐠𝐢𝐮𝐧𝐠𝐢𝐠𝐫𝐮𝐩𝐩𝐢 @
-> ${_0x2b0a49}𝐫𝐞𝐬𝐞𝐭𝐠𝐫𝐮𝐩𝐩𝐢 @
-> ${_0x2b0a49}𝐬𝐞𝐭𝐩𝐩 (𝐢𝐦𝐦𝐚𝐠𝐢𝐧𝐞)
-> ${_0x2b0a49}𝐛𝐚𝐧𝐮𝐬𝐞𝐫 @
-> ${_0x2b0a49}𝐮𝐧𝐛𝐚𝐧𝐮𝐬𝐞𝐫 @
-> ${_0x2b0a49}𝐛𝐥𝐨𝐜𝐤𝐮𝐬𝐞𝐫 @
-> ${_0x2b0a49}𝐮𝐧𝐛𝐥𝐨𝐜𝐤𝐮𝐬𝐞𝐫 @
-> ${_0x2b0a49}𝐩𝐮𝐥𝐢𝐳𝐢𝐚 (+)
-> ${_0x2b0a49}𝐨𝐮𝐭
-> ${_0x2b0a49}𝐩𝐫𝐞𝐟𝐢𝐬𝐬𝐨 (?)
-> ${_0x2b0a49}𝐫𝐞𝐬𝐞𝐭𝐭𝐚𝐩𝐫𝐞𝐟𝐢𝐬𝐬𝐨
-> ${_0x2b0a49}𝐠𝐨𝐝𝐦𝐨𝐝𝐞 {𝐚𝐮𝐭𝐨𝐚𝐝𝐦𝐢𝐧}
-> ${_0x2b0a49}𝐚𝐳𝐳𝐞𝐫𝐚 @
-> ${_0x2b0a49}𝐚𝐠𝐠𝐢𝐮𝐧𝐠𝐢 (𝐧𝐮𝐦. 𝐦𝐞𝐬𝐬𝐚𝐠𝐠𝐢) @
-> ${_0x2b0a49}𝐫𝐢𝐦𝐮𝐨𝐯𝐢 (𝐧𝐮𝐦. 𝐦𝐞𝐬𝐬𝐚𝐠𝐠𝐢) @
-> ${_0x2b0a49}𝐧𝐮𝐤𝐞
-> ${_0x2b0a49}𝐚𝐝𝐝𝐨𝐰𝐧𝐞𝐫 @
-> ${_0x2b0a49}𝐝𝐞𝐥𝐨𝐰𝐧𝐞𝐫 @
-> ${_0x2b0a49}𝐝𝐨𝐰𝐧𝐚𝐥𝐥
-> ${_0x2b0a49}𝐮𝐩𝐚𝐥𝐥
-> ${_0x2b0a49}𝐛𝐥𝐨𝐜𝐤𝐥𝐢𝐬𝐭
-> ${_0x2b0a49}𝐛𝐚𝐧𝐥𝐢𝐬𝐭
-> ${_0x2b0a49}𝐛𝐢𝐠𝐭𝐚𝐠
-> ${_0x2b0a49}𝐥𝐨𝐜𝐤
-> ${_0x2b0a49}𝐬𝐚𝐟𝐞
-> ${_0x2b0a49}𝐬𝐩𝐨𝐧𝐬𝐨𝐫
-> ${_0x2b0a49}𝐠𝐞𝐭𝐩𝐥𝐮𝐠𝐢𝐧
-> ${_0x2b0a49}𝐠𝐞𝐭𝐟𝐢𝐥𝐞
-> ${_0x2b0a49}𝐬𝐚𝐯𝐞𝐩𝐥𝐮𝐠𝐢𝐧 
-> ${_0x2b0a49}𝐝𝐞𝐥𝐞𝐭𝐞𝐩𝐥𝐮𝐠𝐢𝐧
-> ${_0x2b0a49}𝐛𝐚𝐧𝐠𝐡𝐨𝐬𝐭
-> ${_0x2b0a49}𝐨𝐟𝐟𝐮𝐬𝐜𝐚 <𝐭𝐞𝐬𝐭𝐨>
-────────────────
-cescobot
-`;
-
-  let _0x575cba = global.db.data.nomedelbot || " cescobot ";
-  
-  await _0x4d8805.sendMessage(_0x1ece27.chat, {
-    text: _0x3f08c2,
-    contextInfo: {
-      mentionedJid: _0x4d8805.parseMention(wm),
-      forwardingScore: 1,
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363341274693350@newsletter",
-        serverMessageId: '',
-        newsletterName: _0x575cba
+  conn.sendMessage(messaggio.chat, {
+    'text': menu,
+    'contextInfo': {
+      'mentionedJid': conn[ottieni(0x15b)](wm),
+      'forwardingScore': 0x1,
+      'isForwarded': !![],
+      'forwardedNewsletterMessageInfo': {
+        'newsletterJid': funzioni[ottieni(0x13c)],
+        'serverMessageId': '',
+        'newsletterName': '' + nomeBot
       }
     }
-  }, {
-    quoted: _0x2d215f
-  });
+  }, { 'quoted': messaggioDiContesto });
 };
 
-handler.help = ["menu"];
-handler.tags = ['menu'];
-handler.command = /^(owner|menuowner|pannello)$/i;
+gestore.help = [ottieniParola(0x17a)];
+gestore.tags = ['menu'];
+gestore.command = /^(owner|menuowner|pannello)$/i;
 
-export default handler;
+export default gestore;
 
-function clockString(_0xd0d91e) {
-  let _0x27c45a = Math.floor(_0xd0d91e / 3600000);
-  let _0x42617d = Math.floor(_0xd0d91e / 60000) % 60;
-  let _0x1bf8dc = Math.floor(_0xd0d91e / 1000) % 60;
-  return [_0x27c45a, _0x42617d, _0x1bf8dc].map(_0x2d1849 => _0x2d1849.toString().padStart(2, '0')).join(':');
-}
+function clockString(millisecondi) {
+  const ottieni = ottieniParola;
+  const funzioni = {
+    'IpObQ': (a, b) => a / b,
+    'Gymwe': (a, b) => a % b,
+    'YJFJI': (a, b) => a / b
+  };
+
+  let ore = Math[ottieni(0x164)](fun
