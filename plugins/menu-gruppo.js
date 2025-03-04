@@ -1,119 +1,136 @@
-import { performance } from 'perf_hooks';
+import 'os';
+import 'util';
+import 'human-readable';
+import '@whiskeysockets/baileys';
+import 'fs';
+import 'perf_hooks';
 
-const handler = async (message, { conn, usedPrefix }) => {
-    const userCount = Object.keys(global.db.data.users).length;
-    const botName = global.db.data.nomedelbot || 'cescobot';
+let handler = async (_0x316f52, { conn: _0x4a2566, usedPrefix: _0x238280 }) => {
+  let _0x12abbd = {
+    'key': {
+      'participants': "0@s.whatsapp.net",
+      'fromMe': false,
+      'id': 'Halo'
+    },
+    'message': {
+      'locationMessage': {
+        'name': "𝐌𝐞𝐧𝐮 𝐆𝐫𝐮𝐩𝐩𝐨",
+        'jpegThumbnail': await (await fetch("https://qu.ax/cSqEs.jpg")).buffer(),
+        'vcard': `
+          BEGIN:VCARD
+          VERSION:1.0
+          N:;Unlimited;;;
+          FN:Unlimited
+          ORG:Unlimited
+          TITLE:
+          item1.TEL;waid=19709001746:+1 (970) 900-1746
+          item1.X-ABLabel:Unlimited
+          X-WA-BIZ-DESCRIPTION:ofc
+          X-WA-BIZ-NAME:Unlimited
+          END:VCARD
+        `.trim()
+      }
+    },
+    'participant': "0@s.whatsapp.net"
+  };
 
-    const menuText = generateMenuText(usedPrefix, botName, userCount);
-    
-    const profilePictureUrl = await fetchProfilePictureUrl(conn, message.sender);
+  let _0x52ca99 = `
+──────𝐌𝐞𝐧𝐮 𝐆𝐫𝐮𝐩𝐩𝐨─────
+- ${_0x238280}𝐚𝐛𝐛𝐫𝐚𝐜𝐜𝐢𝐚 @
+- ${_0x238280}𝐥𝐞𝐜𝐜𝐨/𝐚 @ 
+- ${_0x238280}𝐦𝐨𝐫𝐝𝐢 @ 
+- ${_0x238280}𝐚𝐥𝐜𝐨𝐥𝐢𝐳𝐳𝐚𝐭𝐨 @  
+- ${_0x238280}𝐫𝐢𝐬𝐜𝐫𝐢𝐯𝐢 (𝐦𝐞𝐬𝐬𝐚𝐠𝐠𝐢𝐨) 
+- ${_0x238280}𝐦𝐞𝐭𝐞𝐨 ( 𝐜𝐢𝐭𝐭𝐚' )
+- ${_0x238280}𝐡𝐝( 𝐟𝐨𝐭𝐨 )
+- ${_0x238280}𝐥𝐞𝐠𝐠𝐢( 𝐟𝐨𝐭𝐨 )
+- ${_0x238280}𝐫𝐢𝐦𝐮𝐨𝐯𝐢𝐬𝐟𝐨𝐧𝐝𝐨 ( 𝐟𝐨𝐭𝐨 )
+- ${_0x238280}𝐬𝐞𝐠𝐚( 𝐧𝐨𝐦𝐞 )
+- ${_0x238280}𝐝𝐢𝐭𝐚𝐥𝐢𝐧𝐨 ( 𝐧𝐨𝐦𝐞 )
+- ${_0x238280}𝐢𝐧𝐬𝐮𝐥𝐭𝐚  ( 𝐧𝐨𝐦𝐞 )
+- ${_0x238280}𝐪𝐫𝐜𝐨𝐝𝐞( 𝐭𝐞𝐬𝐭𝐨 )
+- ${_0x238280}𝐫𝐢𝐯𝐞𝐥𝐚 ( foto¹ )
+- ${_0x238280}𝐬𝐭𝐲𝐥𝐞𝐭𝐞𝐱𝐭
+- ${_0x238280}𝐜𝐚𝐥𝐜( 𝟏+𝟏 )
+- ${_0x238280}𝐦𝐬𝐠' @
+- ${_0x238280}𝐛𝐞𝐥𝐥𝐨/𝐚 @
+- ${_0x238280}𝐠𝐚𝐲 @
+- ${_0x238280}𝐩𝐮𝐭𝐭𝐚𝐧𝐚@
+- ${_0x238280}𝐥𝐞𝐬𝐛𝐢𝐜𝐚@
+- ${_0x238280}𝐢𝐧𝐬𝐮𝐥𝐭𝐚  @
+- ${_0x238280}𝐬𝐭𝐮𝐩𝐫𝐚 @
+- ${_0x238280}𝐟𝐫𝐨𝐜𝐢𝐨@
+- ${_0x238280}𝐨𝐝𝐢𝐨@
+- ${_0x238280}𝐚𝐦𝐨𝐫𝐞@
+- ${_0x238280}𝐝𝐨𝐱 @
+- ${_0x238280}𝐢𝐝(gruppo)
+- ${_0x238280}𝐡𝐚𝐧𝐝𝐢𝐜𝐚𝐩𝐩𝐚𝐭𝐨 @
+- ${_0x238280}𝐬𝐞𝐭𝐢𝐠
+- ${_0x238280}𝐞𝐥𝐢𝐦𝐢𝐧𝐚𝐢𝐠
+- ${_0x238280}𝐭𝐫𝐢𝐬
+- ${_0x238280}𝐜𝐫𝐮𝐬𝐡 @
+- ${_0x238280}𝐭𝐨𝐩𝐠𝐚𝐲𝐬
+- ${_0x238280}𝐭𝐨𝐩𝐧𝐚𝐳𝐢
+- ${_0x238280}𝐭𝐭𝐩
+- ${_0x238280}𝐝𝐚𝐝𝐨
+- ${_0x238280}𝐬𝐭𝐢𝐜𝐤𝐞𝐫/ 𝐬
+- ${_0x238280}𝐭𝐨𝐯𝐢𝐝𝐞𝐨
+- ${_0x238280}𝐭𝐨𝐠𝐢𝐟
+- ${_0x238280}𝐚𝐮𝐭𝐨𝐚𝐝𝐦𝐢𝐧
+- ${_0x238280}𝐤𝐞𝐛𝐚𝐛 @
+- ${_0x238280}𝐬𝐚𝐲𝐚𝐧 @ 
+- ${_0x238280}𝐦𝐨𝐫𝐝𝐢 @ 
+- ${_0x238280}𝐦𝐢𝐫𝐚 @ 
+- ${_0x238280}𝐜𝐫𝐞𝐚𝐜𝐨𝐩𝐩𝐢𝐚 
+- ${_0x238280}𝐚𝐦𝐢𝐜𝐢𝐳𝐢𝐚 @ 
+- ${_0x238280}𝐥𝐢𝐬𝐭𝐚𝐦𝐢𝐜𝐢
+- ${_0x238280}𝐫𝐞𝐠𝐨𝐥𝐞
+- ${_0x238280}𝐧𝐞𝐫𝐚 @
+- ${_0x238280}𝐜𝐥𝐨𝐰𝐧 @
+- ${_0x238280}𝐫𝐚𝐧𝐝𝐨𝐦 @ 
+- ${_0x238280}𝐜𝐫𝐢𝐦𝐢𝐧𝐚𝐥𝐞 @
+- ${_0x238280}𝐝𝐫𝐨𝐠𝐚𝐭𝐨 @
+- ${_0x238280} 𝐜𝐨𝐦𝐮𝐧𝐢𝐬𝐭𝐚 @
+- ${_0x238280} 𝐩𝐫𝐨𝐬𝐭𝐢𝐭𝐮𝐭𝐚 @
+- ${_0x238280} 𝐩𝐮𝐭𝐭𝐚𝐧𝐢𝐞𝐫𝐞 @
+──────────────
+cescobot `.trim();
 
-    const messageOptions = {
-        contextInfo: {
-            forwardingScore: 1,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363259442839354@newsletter',
-                serverMessageId: '',
-                newsletterName: `${botName}`
-            },
-            externalAdReply: {
-                title: 'Menu Principale',
-                body: 'Versione: 1.0',
-                mediaType: 1,
-                renderLargerThumbnail: false,
-                previewType: 'thumbnail',
-                thumbnail: await fetchThumbnail('https://i.ibb.co/HpkzmrMZ/cescobot.jpg'),
-                
-            }
-        }
-    };
+  let _0x18f634 = global.db.data.nomedelbot || " cescobot ";
 
-    await conn.sendMessage(message.chat, { text: menuText, ...messageOptions }, { quoted: message });
+  _0x4a2566.sendMessage(_0x316f52.chat, {
+    'text': _0x52ca99,
+    'contextInfo': {
+      'mentionedJid': _0x4a2566.parseMention(wm),
+      'forwardingScore': 1,
+      'isForwarded': true,
+      'forwardedNewsletterMessageInfo': {
+        'newsletterJid': "120363341274693350@newsletter",
+        'serverMessageId': '',
+        'newsletterName': '' + _0x18f634
+      }
+    }
+  }, { 'quoted': _0x12abbd });
 };
 
-async function fetchProfilePictureUrl(conn, sender) {
-    try {
-        return await conn.profilePictureUrl(sender);
-    } catch (error) {
-        return 'default-profile-picture-url'; // Fallback URL in case of error
-    }
-}
-
-async function fetchThumbnail(url) {
-    try {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        return new Uint8Array(arrayBuffer);
-    } catch (error) {
-        return 'default-thumbnail'; // Fallback thumbnail in case of error
-    }
-}
-
-handler.help = ['menu'];
+handler.help = ["menu"];
 handler.tags = ['menu'];
-handler.command = /^(gruppo|comandigruppo)$/i;
-
+handler.command = /^(menugruppo|gruppo)$/i;
 export default handler;
 
-function generateMenuText(prefix, botName, userCount) {
-    return `
-        
- 『💬』 ══ •⊰✰⊱• ══ 『💬』
-- ${prefix}𝐩𝐥𝐚𝐲 ( 𝐜𝐚𝐧𝐳𝐨𝐧𝐞 + 𝐚𝐫𝐭𝐢𝐬𝐭𝐚 ) 
-- ${prefix}𝐯𝐢𝐝𝐞𝐨 ( 𝐜𝐚𝐧𝐳𝐨𝐧𝐞 + 𝐚𝐫𝐭𝐢𝐬𝐭𝐚 ) 
-- ${prefix}𝐬𝐡𝐚𝐳𝐚𝐦 ( 𝐚𝐮𝐝𝐢𝐨 )
-- ${prefix}𝐦𝐞𝐭𝐞𝐨 ( 𝐜𝐢𝐭𝐭𝐚' )
-- ${prefix}𝐡𝐝 ( 𝐟𝐨𝐭𝐨 )
-- ${prefix}𝐥𝐞𝐠𝐠𝐢 ( 𝐟𝐨𝐭𝐨 )
-- ${prefix}𝐫𝐢𝐦𝐮𝐨𝐯𝐢𝐬𝐟𝐨𝐧𝐝𝐨 ( 𝐟𝐨𝐭𝐨 )
-- ${prefix}𝐬𝐞𝐠𝐚 ( 𝐧𝐨𝐦𝐞 )
-- ${prefix}𝐝𝐢𝐭𝐚𝐥𝐢𝐧𝐨 ( 𝐧𝐨𝐦𝐞 )
-- ${prefix}𝐢𝐧𝐬𝐮𝐥𝐭𝐚 ( 𝐧𝐨𝐦𝐞 )
-- ${prefix}𝐪𝐫𝐜𝐨𝐝𝐞 (  𝐭𝐞𝐬𝐭𝐨 )
-- ${prefix}𝐫𝐢𝐯𝐞𝐥𝐚 ( 𝐟𝐨𝐭𝐨¹ )
-- ${prefix}𝐬𝐭𝐲𝐥𝐞𝐭𝐞𝐱𝐭 ( 𝐭𝐞𝐬𝐭𝐨 )
-- ${prefix}𝐜𝐚𝐥𝐜 ( 𝟏+𝟏 )
-- ${prefix}𝐦𝐬𝐠/𝐚𝐭𝐭𝐢𝐯𝐢𝐭𝐚' @
-- ${prefix}𝐜𝐨𝐧𝐭𝐚𝐩𝐚𝐫𝐨𝐥𝐞 ( 𝐭𝐞𝐬𝐭𝐨 )
-- ${prefix}𝐛𝐞𝐥𝐥𝐨/𝐚 @
-- ${prefix}𝐠𝐚𝐲 @
-- ${prefix}𝐩𝐮𝐭𝐭𝐚𝐧𝐚 @
-- ${prefix}𝐥𝐞𝐬𝐛𝐢𝐜𝐚 @
-- ${prefix}𝐢𝐧𝐬𝐮𝐥𝐭𝐚 @
-- ${prefix}𝐬𝐜𝐨𝐩𝐚 @
-- ${prefix}𝐚𝐛𝐛𝐫𝐚𝐜𝐜𝐢𝐚 @
-- ${prefix}𝐨𝐝𝐢𝐨 @
-- ${prefix}𝐚𝐦𝐨𝐫𝐞 @
-- ${prefix}𝐝𝐨𝐰𝐧 @
-- ${prefix}𝐫𝐢𝐭𝐚𝐫𝐝𝐚𝐭𝐨/a @
-- ${prefix}𝐝𝐢𝐬𝐚𝐛𝐢𝐥𝐞 @
-- ${prefix}𝐦𝐨𝐧𝐠𝐨𝐥𝐨𝐢𝐝𝐞 @
-- ${prefix}𝐝𝐨𝐱 @
-- ${prefix}𝐢𝐝 (𝐠𝐫𝐮𝐩𝐩𝐨)
-- ${prefix}𝐠𝐢𝐭𝐜𝐥𝐨𝐧𝐞
-- ${prefix}𝐢𝐦𝐠
-- ${prefix}𝐬𝐞𝐭𝐢𝐠
-- ${prefix}𝐞𝐥𝐢𝐦𝐢𝐧𝐚𝐢𝐠
-- ${prefix}𝐭𝐫𝐢𝐬
-- ${prefix}𝐬𝐩𝐨𝐬𝐚𝐦𝐢
-- ${prefix}𝐜𝐫𝐮𝐬𝐡
-- ${prefix}𝐭𝐨𝐩𝐠𝐚𝐲𝐬
-- ${prefix}𝐭𝐨𝐩𝐧𝐚𝐳𝐢
-- ${prefix}𝐭𝐭𝐩
-- ${prefix}𝐝𝐚𝐝𝐨
-- ${prefix}𝐬𝐭𝐢𝐜𝐤𝐞𝐫 / 𝐬
-- ${prefix}𝐫𝐢𝐦𝐮𝐨𝐯𝐢𝐬𝐟𝐨𝐧𝐝𝐨
-- ${prefix}𝐭𝐨𝐯𝐢𝐝𝐞𝐨
-- ${prefix}𝐭𝐨𝐠𝐢𝐟
-- ${prefix}𝐛𝐨𝐧𝐤
-- ${prefix}𝐩𝐧𝐠
-- ${prefix}𝐬𝐥𝐨𝐭
-- ${prefix}𝐚𝐮𝐭𝐨𝐚𝐝𝐦𝐢𝐧
-- ${prefix}stellacadente
-- ${prefix}raggiodisole
-- ${prefix}toccomagico
-『💬』 ══ •⊰✰⊱• ══ 『💬』
+function clockString(_0x5376bb) {
+  let _0x14ce08 = Math.floor(_0x5376bb / 3600000);
+  let _0x11e6bc = Math.floor(_0x5376bb / 60000) % 60;
+  let _0xaff805 = Math.floor(_0x5376bb / 1000) % 60;
 
-    `;
+  console.log({
+    'ms': _0x5376bb,
+    'h': _0x14ce08,
+    'm': _0x11e6bc,
+    's': _0xaff805
+  });
+
+  return [_0x14ce08, _0x11e6bc, _0xaff805]
+    .map(_0x421c43 => _0x421c43.toString().padStart(2, 0))
+    .join(':');
 }
