@@ -8,7 +8,7 @@ export async function before(m, { isAdmin, groupMetadata, isBotAdmin }) {
     if (!m.text) return false;
 
     let chatSettings = global.db.data.chats[m.chat];
-    let warnThreshold = 3;
+    let warnThreshold = 5;
     let participantId = m.participant.id;
     let senderId = m.sender;
     let groupData = global.db.data.users[senderId] || {};
