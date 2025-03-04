@@ -1,151 +1,120 @@
-import 'os';
-import 'util';
-import 'human-readable';
-import '@whiskeysockets/baileys';
-import 'fs';
-import 'perf_hooks';
+// Import delle librerie necessarie
+import os from 'os';
+import util from 'util';
+import humanReadable from 'human-readable';
+import baileys from '@whiskeysockets/baileys';
+import fs from 'fs';
+import { performance } from 'perf_hooks';
 
-let handler = async (message, { conn, usedPrefix }) => {
-  // Ottieni i dati specifici per la chat
-  const {
-    antiToxic,
-    antilinkhard,
-    antiPrivate,
-    antitraba,
-    antiArab,
-    antiviewonce,
-    isBanned,
-    welcome,
-    detect,
-    sWelcome,
-    sBye,
-    sPromote,
-    sDemote,
-    antiLink,
-    antilinkbase,
-    antitiktok,
-    sologruppo,
-    soloprivato,
-    antiCall,
-    modohorny,
-    gpt,
-    antiinsta,
-    antielimina,
-    antitelegram,
-    antiSpam,
-    antiPorno,
-    jadibot,
-    autosticker,
-    modoadmin,
-    audios
-  } = global.db.data.chats[message.chat];
+/**
+ * Funzione di utilità per convertire un tempo (in millisecondi) nel formato "hh:mm:ss"
+ * @param {number} ms - Tempo in millisecondi
+ * @returns {string} Tempo formattato (hh:mm:ss)
+ */
+function clockString(ms) {
+  const hours = Math.floor(ms / 3600000);
+  const minutes = Math.floor(ms / 60000) % 60;
+  const seconds = Math.floor(ms / 1000) % 60;
+  console.log({ ms, hours, minutes, seconds });
+  return [hours, minutes, seconds]
+    .map(unit => unit.toString().padStart(2, '0'))
+    .join(':');
+}
 
-  // Identifica il destinatario del messaggio
-  let recipient = message.quoted ? message.quoted.sender : message.mentionedJid && message.mentionedJid[0] ? message.mentionedJid[0] : message.fromMe ? conn.user.jid : message.sender;
+/**
+ * Handler per il comando "funzioni".
+ * Mostra il menu delle funzionalità (stato delle opzioni attive/disabilitate) insieme ad alcune statistiche.
+ *
+ * @param {Object} msg - Il messaggio ricevuto
+ * @param {Object} param1 - Oggetto contenente la connessione e il prefisso usato
+ * @param {Object} param1.conn - L'istanza della connessione (client WhatsApp)
+ * @param {string} param1.usedPrefix - Il prefisso usato per attivare il comando
+ */
+const handler = async (msg, { conn, usedPrefix }) => {
+  // Calcola l'uptime del processo in millisecondi e lo formatta
+  const uptimeMs = process.uptime() * 1000;
+  const formattedUptime = clockString(uptimeMs);
 
-  // Ottieni l'immagine del profilo del destinatario
-  const profilePicUrl = (await conn.profilePictureUrl(recipient, "image").catch(() => null)) || "./src/avatar_contact.png";
-  let profilePicBuffer;
-  if (profilePicUrl !== "./src/avatar_contact.png") {
-    profilePicBuffer = await (await fetch(profilePicUrl)).buffer();
-  } else {
-    profilePicBuffer = await (await fetch("https://qu.ax/cSqEs.jpg")).buffer();
-  }
+  // Recupera il numero totale di utenti registrati nel database globale
+  const totalUsers = Object.entries(global.db.data.users).length;
 
-  // Definizione del messaggio da inviare
-  let menuMessage = {
-    'key': {
-      'participants': "0@s.whatsapp.net",
-      'fromMe': false,
-      'id': "Halo"
+  // Ottieni la lista di tutte le chat dalla connessione e filtra quelle effettivamente attive
+  const allChats = Object.entries(conn.chats).filter(([jid, chat]) => jid && chat.isChats);
+  const groupChats = allChats.filter(([jid]) => jid.endsWith('@g.us'));
+  const privateChats = allChats.filter(([jid]) => jid.includes('@s.whatsapp.net'));
+
+  // Recupera le impostazioni del bot per l'utente corrente (ad es. restrizioni)
+  const settings = global.db.data.settings[conn.user.jid] || {};
+  const { restrict } = settings;
+  const { autoread } = global;
+
+  // Definisce il percorso di un'immagine predefinita
+  const defaultImagePath = './no.png';
+
+  // Misurazione della latenza (latency) tramite performance.now()
+  const startTime = performance.now();
+  const endTime = performance.now();
+  const latency = endTime - startTime;
+
+  // Costruisce un messaggio "quotato" che verrà usato come banner (con immagine e vCard fittizia)
+  const quotedMsg = {
+    key: {
+      participants: '0@s.whatsapp.net',
+      fromMe: false,
+      id: 'menuBanner'
     },
-    'message': {
-      'locationMessage': {
-        'name': "𝐌𝐞𝐧𝐮 𝐝𝐞𝐥𝐥𝐞 𝐟𝐮𝐧𝐳𝐢𝐨𝐧𝐚𝐥𝐢𝐭𝐚'",
-        'jpegThumbnail': await (await fetch("https://qu.ax/cSqEs.jpg")).buffer()
+    message: {
+      locationMessage: {
+        name: '𝐌𝐞𝐧𝐮 delle funzionalità\'',
+        // Scarica l'immagine da utilizzare come thumbnail
+        jpegThumbnail: await (await fetch('https://telegra.ph/file/8ca14ef9fa43e99d1d196.jpg')).buffer()
       }
     },
-    'participant': "0@s.whatsapp.net"
+    participant: '0@s.whatsapp.net'
   };
 
-  // Menu delle funzioni con miglior disposizione
-  let statusMessage = `
-╭━━━━━━━━━━━━━━━━━━━━━━━━
-│  📜  **𝗠𝗲𝗻𝘂 𝗳𝘂𝗻𝘇𝗶𝗼𝗻𝗶 𝗮𝗰𝘁𝗶𝘃𝗮𝗯𝗶𝗹𝗲** 📜
-╰━━━━━━━━━━━━━━━━━━━━━━━━
-   
-🔘 **Funzioni Attive/Disattive**:
-   
-   🟢 **Anti-Link**: ${antiLink ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Call**: ${antiCall ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Toxic**: ${antiToxic ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-TikTok**: ${antitiktok ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Spam**: ${antiSpam ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Porno**: ${antiPorno ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Private**: ${antiPrivate ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Instagram**: ${antiinsta ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Anti-Arab**: ${antiArab ? '✔️ Attivo' : '❌ Disattivo'}
+  // Costruzione del testo del menu, che mostra lo stato (attivo/disabilitato) di diverse funzionalità
+  // Qui vengono visualizzati anche alcuni parametri e statistiche
+  let menuText = (
+    '𝐚𝐭𝐭𝐢𝐯𝐚 antilink: ' + (global.db.data.chats[msg.chat].detect ? '🟢' : '🔴') + ' | ' +
+    '𝐠𝐩𝐭: ' + (global.db.data.chats[msg.chat].gpt ? '🟢' : '🔴') + ' | ' +
+    '𝐣𝐚𝐝𝐢𝐛𝐨𝐭: ' + (global.db.data.chats[msg.chat].jadibot ? '🟢' : '🔴') + ' » ' + usedPrefix + 'jadibot\n' +
+    '𝐦𝐨𝐝𝐨𝐚𝐝𝐦𝐢𝐧: ' + (global.db.data.chats[msg.chat].modoadmin ? '🟢' : '🔴') + ' | ' +
+    '𝐚𝐧𝐭𝐢𝐥𝐢𝐧𝐤: ' + (global.db.data.chats[msg.chat].antiLink ? '🟢' : '🔴') + ' | ' +
+    '𝐚𝐧𝐭𝐢𝐢𝐧𝐬𝐭𝐚: ' + (global.db.data.chats[msg.chat].antiinsta ? '🟢' : '🔴') + '\n' +
+    'Uptime: ' + formattedUptime + '\n' +
+    'Utenti totali: ' + totalUsers + '\n' +
+    'Chat di gruppo: ' + groupChats.length + '\n' +
+    'Chat private: ' + privateChats.length + '\n' +
+    'Latenza: ' + latency.toFixed(2) + ' ms'
+  ).trim();
 
-🔘 **Funzioni di Benvenuto & Uscita**:
-   
-   🟢 **Benvenuto**: ${welcome ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Bye Message**: ${sBye ? '✔️ Attivo' : '❌ Disattivo'}
-   
-🔘 **Funzioni di Moderazione**:
+  // Recupera il nome del bot dalle impostazioni, oppure usa un valore di default
+  const botName = global.db.data.settings[conn.user.jid]?.nomedelbot || 'ChatUnity-Bot';
 
-   🟢 **Modifica Admin**: ${modoadmin ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Promozione & Degradazione**: ${sPromote ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Traba (Anti-Trav)**: ${antitraba ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Detecc (Detection)**: ${detect ? '✔️ Attivo' : '❌ Disattivo'}
-
-🔘 **Altre Funzioni**:
-
-   🟢 **GPT-3**: ${gpt ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **JadiBot**: ${jadibot ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Soltanto Gruppo**: ${sologruppo ? '✔️ Attivo' : '❌ Disattivo'}
-   🟢 **Soltanto Privato**: ${soloprivato ? '✔️ Attivo' : '❌ Disattivo'}
-
-╭━━━━━━━━━━━━━━━━━━━━━━━━
-│  ⚙️ **Comandi Disponibili**:
-╰━━━━━━━━━━━━━━━━━━━━━━━━
-
-   1. **${usedPrefix}attiva <funzione>** - Attiva una funzione.
-   2. **${usedPrefix}disattiva <funzione>** - Disattiva una funzione.
-   3. **${usedPrefix}infostato** - Mostra lo stato delle funzioni attivate.
-
-╭━━━━━━━━━━━━━━━━━━━━━━━━
-│  ℹ️ **Info su Funzioni**:
-╰━━━━━━━━━━━━━━━━━━━━━━━━
-
-   🟢 = Funzione attiva
-   ❌ = Funzione disattivata
-
-─────────────
-   `.trim();
-
-  // Invia il messaggio con la lista delle funzioni
-  conn.sendMessage(message.chat, {
-    text: statusMessage,
-    contextInfo: {
-      mentionedJid: conn.parseMention("cescobot")
-    }
-  }, {
-    quoted: menuMessage
-  });
+  // Invia il messaggio del menu con informazioni contestuali (ad es. menzioni e newsletter)
+  conn.sendMessage(
+    msg.chat,
+    {
+      text: menuText,
+      contextInfo: {
+        mentionedJid: conn.parseMention(menuText),
+        forwardingScore: 1,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363259442839354@newsletter',
+          serverMessageId: '',
+          newsletterName: botName
+        }
+      }
+    },
+    { quoted: quotedMsg }
+  );
 };
 
-// Comando per richiedere il menu
-handler.help = ["menu"];
-handler.tags = ["menu"];
+// Configurazione del comando: il comando viene attivato con "funzioni"
+handler.help = ['funzioni'];
+handler.tags = ['funzioni'];
 handler.command = /^(funzioni)$/i;
 
 export default handler;
-
-// Funzione per calcolare il tempo in formato stringa
-function clockString(ms) {
-  let hours = Math.floor(ms / 3600000);
-  let minutes = Math.floor(ms / 60000) % 60;
-  let seconds = Math.floor(ms / 1000) % 60;
-
-  return [hours, minutes, seconds].map(n => n.toString().padStart(2, '0')).join(':');
-}
