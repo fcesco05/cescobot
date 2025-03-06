@@ -12,7 +12,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
   await conn.groupSettingUpdate(m.chat, 'announcement');
   
   // Invia il messaggio di conferma con newsletter forwarding
-  let nomeDelBot = global.db.data.settings[conn.user.jid]?.nomedelbot || '𝐂𝐡𝐚𝐭𝐔𝐧𝐢𝐭𝐲';
+  let nomeDelBot = global.db.data.settings[conn.user.jid]?.nomedelbot || 'cescobot';
   await conn.sendMessage(m.chat, {
     text: '🚫 Il gruppo è stato chiuso! Solo gli admin possono scrivere ora.',
     contextInfo: {
