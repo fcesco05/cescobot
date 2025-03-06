@@ -2009,5 +2009,5 @@ def main():
             raise SystemExit('ERROR: %s' % msg)
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == '__cesco__':
+    cesco()
