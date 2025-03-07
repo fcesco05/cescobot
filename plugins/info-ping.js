@@ -1,124 +1,86 @@
-import { cpus as _cpus, totalmem, freemem } from 'os'
-import { performance } from 'perf_hooks'
-import { sizeFormatter } from 'human-readable'
+import fetch from 'node-fetch';
+import { performance } from 'perf_hooks';
 
-let format = sizeFormatter({
-  std: 'JEDEC',
-  decimalPlaces: 2,
-  keepTrailingZeroes: false,
-  render: (literal, symbol) => `${literal} ${symbol}B`,
-})
-
-let handler = async (m, { conn, usedPrefix, command }) => {
-  let nomeDelBot = global.db.data.nomedelbot || `cescobot`
-  let versioneBot = '1.0' // Specifica la versione del bot
-  let old = performance.now()
-  let neww = performance.now()
-  let speed = (neww - old).toFixed(2) // Limita la velocità a 2 decimali
-  let uptime = process.uptime() * 1000
-
-  // CPU info
-  const cpus = _cpus().map(cpu => {
-    cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
-    return cpu
-  })
-
-  const cpu = cpus.reduce((last, cpu, _, { length }) => {
-    last.total += cpu.total
-    last.speed += cpu.speed / length
-    last.times.user += cpu.times.user
-    last.times.nice += cpu.times.nice
-    last.times.sys += cpu.times.sys
-    last.times.idle += cpu.times.idle
-    last.times.irq += cpu.times.irq
-    return last
-  }, {
-    speed: 0,
-    total: 0,
-    times: {
-      user: 0,
-      nice: 0,
-      sys: 0,
-      idle: 0,
-      irq: 0
-    }
-  })
-
-  let cpuModel = cpus[0]?.model || 'Unknown Model'
-  let cpuSpeed = cpu.speed.toFixed(2)
-
-  let caption = `『💬』 ══ •⊰✰⊱• ══ 『💬』
-🟢 𝐀𝐭𝐭𝐢𝐯𝐢𝐭𝐚': ${clockString(uptime)}
-🚀 𝐕𝐞𝐥𝐨𝐜𝐢𝐭𝐚': ${speed} ms
-
-💻 𝐈𝐧𝐟𝐨 𝐒𝐢𝐬𝐭𝐞𝐦𝐚:
-📊 𝐌𝐨𝐝𝐞𝐥𝐥𝐨 𝐂𝐏𝐔: ${cpuModel}
-🔄 𝐕𝐞𝐥𝐨𝐜𝐢𝐭𝐚' 𝐂𝐏𝐔: ${cpuSpeed} MHz
-
-💾 𝐌𝐞𝐦𝐨𝐫𝐢𝐚:
-🟣 𝐑𝐀𝐌: ${format(totalmem() - freemem())} / ${format(totalmem())}
-🔵 𝐑𝐀𝐌 𝐋𝐢𝐛𝐞𝐫𝐚: ${format(freemem())}
-『💬』 ══ •⊰✰⊱• ══ 『💬』`
-
-  const profilePictureUrl = await fetchProfilePictureUrl(conn, m.sender)
-
-  let messageOptions = {
-    contextInfo: {
-      forwardingScore: 999,
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363259442839354@newsletter',
-        serverMessageId: '',
-        newsletterName: `${nomeDelBot}`
-      }
-    }
-  }
-
-  if (profilePictureUrl !== 'default-profile-picture-url') {
-    messageOptions.contextInfo.externalAdReply = {
-      title: nomeDelBot,
-      body: `Versione: ${versioneBot}`,
-      mediaType: 1,
-      renderLargerThumbnail: false,
-      previewType: 'thumbnail',
-      thumbnail: await fetchThumbnail('https://i.ibb.co/HpkzmrMZ/cesco.jpg'),
-    }
-  }
-
-  await conn.sendMessage(m.chat, {
-    text: caption,
-    ...messageOptions
-  })
-}
-
-async function fetchProfilePictureUrl(conn, sender) {
+let handler = async (m, { conn }) => {
   try {
-    return await conn.profilePictureUrl(sender)
-  } catch (error) {
-    return 'default-profile-picture-url' // Fallback URL in case of error
+    // 1. Calcola l'uptime (tempo di attività) del bot
+    const uptimeMs = process.uptime() * 1000; // Ottiene l'uptime in millisecondi
+    const uptimeStr = formatUptime(uptimeMs); // Formatta l'uptime in ore:minuti:secondi
+
+    // 2. Calcola la velocità di esecuzione del comando (ping)
+    const startTime = performance.now(); // Registra il tempo di inizio
+    const endTime = performance.now();   // Registra il tempo di fine
+    const speed = (endTime - startTime).toFixed(4); // Calcola la differenza (tempo di esecuzione)
+
+    // 3. Ottieni il nome del bot (o usa un nome predefinito)
+    const botName = global.db?.data?.nomedelbot || "CescoBot";
+
+    // 4. Scarica un'immagine di stato (o usa un'immagine predefinita)
+    const imageResponse = await fetch('https://telegra.ph/file/2f38b3fd9cfba5935b496.jpg');
+
+    if (!imageResponse.ok) {
+      throw new Error(`Errore durante la richiesta: ${imageResponse.status}`);
+    }
+
+    // 5. Calcola l'ora di attivazione del bot
+    const botStartTime = new Date(Date.now() - uptimeMs);
+    const activationTime = botStartTime.toLocaleString('it-IT', {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+    // 6. Crea il messaggio di stato
+    const message = `
+⏳══ •⊰✰⊱• ══ ⏳
+
+CescoBot
+𝐀𝐓𝐓𝐈𝐕𝐈𝐓𝐀: ${uptimeStr}
+𝐀𝐓𝐓𝐈𝐕𝐀𝐓𝐎 𝐈𝐋: ${activationTime}
+𝐕𝐄𝐋𝐎𝐂𝐈𝐓𝐀: ${speed} secondi
+
+⏳══ •⊰✰⊱• ══ ⏳
+CescoBot *Versione* 1.0
+`.trim();
+
+    // 7. Invia il messaggio di stato
+    await conn.sendMessage(m.chat, {
+      text: message,
+      contextInfo: {
+        mentionedJid: conn.parseMention(botName),
+        forwardingScore: 1,
+        isForwarded: true,
+      },
+    });
+  } catch (err) {
+    console.error("Errore nell'handler:", err);
+    await conn.sendMessage(m.chat, {text: "Si è verificato un errore."});
   }
+};
+
+// Funzione per formattare l'uptime in ore:minuti:secondi
+function formatUptime(ms) {
+  let seconds = Math.floor(ms / 1000);
+  let minutes = Math.floor(seconds / 60);
+  let hours = Math.floor(minutes / 60);
+
+  seconds = seconds % 60;
+  minutes = minutes % 60;
+
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
-async function fetchThumbnail(url) {
-  try {
-    const response = await fetch(url)
-    const buffer = await response.buffer()
-    return buffer
-  } catch (error) {
-    return 'default-thumbnail' // Fallback thumbnail in case of error
-  }
+// Funzione per aggiungere uno zero iniziale se necessario
+function pad(number) {
+  return (number < 10 ? '0' : '') + number;
 }
 
-handler.help = ['ping', 'speed']
-handler.tags = ['info', 'tools']
-handler.command = /^(ping)$/i
+handler.help = ['stato', 'ping', 'info'];
+handler.tags = ['info'];
+handler.command = /^(stato|ping|info)$/i;
 
-export default handler
-
-function clockString(ms) {
-  let d = Math.floor(ms / 86400000)
-  let h = Math.floor(ms / 3600000) % 24
-  let m = Math.floor(ms / 60000) % 60
-  let s = Math.floor(ms / 1000) % 60
-  return [d, h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
-}
+export default handler;
