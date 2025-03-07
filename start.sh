@@ -2,7 +2,7 @@
 GREEN='\033[0;32m'
 while : 
 do
-echo "${BLUE} connettendo.."
+echo "${GREEN} connettendo.."
     node index.js
     sleep 1
 
