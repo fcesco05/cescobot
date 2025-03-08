@@ -25,7 +25,7 @@ const animatedMessage = (text, font = 'block', colors = ['cyan', 'blue'], align 
 
 
 console.clear();
-animatedMessage('333\ncescobot', 'block', ['magenta', 'cyan']);
+animatedMessage('cesco\ncescobot', 'block', ['magenta', 'cyan']);
 console.log('\n🔥 Sistema in avvio...');
 console.log('⏳ Preparazione dei moduli...\n');
 
