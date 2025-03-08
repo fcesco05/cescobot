@@ -32,7 +32,7 @@ let handler = async (message, { conn, usedPrefix }) => {
         ➤ ${usedPrefix}owner
         ➤ ${usedPrefix}crediti
         ➤ ${usedPrefix}supporto
-        ➤ ${usedPrefix}botinfo       Dev by Gab
+        ➤ ${usedPrefix}botinfo       Dev by Cesco
 
         ────────────────────────
          cescobot   -  Versione: ${vs}
