@@ -317,7 +317,7 @@ if (opcion == '1' || methodCodeQR) {
  }}
   if (connection == 'open') {
     await conn.groupAcceptInvite('DrnPDROIs6W8ZGCLPvKL0t')
-    console.log(chalk.green('\n ꙰ 𝟥𝟥𝟥 ꙰ 𝔹𝕆𝕋 ꙰  𝐜𝐨𝐧𝐧𝐞𝐬𝐬𝐨 ✅️ \n'))
+    console.log(chalk.green('\ncescobot  𝐜𝐨𝐧𝐧𝐞𝐬𝐬𝐨 ✅️ \n'))
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
 if (reason == 405) {
